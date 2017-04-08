@@ -1,1 +1,9 @@
 C:\Users\DESARROLLO\Desktop\PropuestaEsquema\Demo\Demo\bin\Debug\Demo.exe.config
+C:\Users\DESARROLLO\Desktop\PropuestaEsquema\Demo\Demo\obj\Debug\Demo.csprojResolveAssemblyReference.cache
+C:\Users\DESARROLLO\Desktop\PropuestaEsquema\Demo\Demo\obj\Debug\Demo.Form1.resources
+C:\Users\DESARROLLO\Desktop\PropuestaEsquema\Demo\Demo\obj\Debug\Demo.Properties.Resources.resources
+C:\Users\DESARROLLO\Desktop\PropuestaEsquema\Demo\Demo\obj\Debug\Demo.csproj.GenerateResource.Cache
+C:\Users\DESARROLLO\Desktop\PropuestaEsquema\Demo\Demo\bin\Debug\Demo.exe
+C:\Users\DESARROLLO\Desktop\PropuestaEsquema\Demo\Demo\bin\Debug\Demo.pdb
+C:\Users\DESARROLLO\Desktop\PropuestaEsquema\Demo\Demo\obj\Debug\Demo.exe
+C:\Users\DESARROLLO\Desktop\PropuestaEsquema\Demo\Demo\obj\Debug\Demo.pdb
