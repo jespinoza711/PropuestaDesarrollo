@@ -12,7 +12,7 @@ namespace Demo
 {
     public partial class Form1 : Form
     {
-        private DataSet TipoDS;
+        private DataTable TipoDS;
         DataRow currentRow;
 
         public Form1()
@@ -24,8 +24,8 @@ namespace Demo
         {
             try
             {
-                TipoDS = ArticuloDAC.GetData();
-                DataTable TipoTable = TipoDS.Tables["Tipo"];
+                TipoDS = TipoDAC.GetData();
+                DataTable TipoTable = TipoDS;
                 this.dataGridView1.DataSource = TipoTable;
             }
             catch (Exception ex) {
