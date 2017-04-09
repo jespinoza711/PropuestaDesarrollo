@@ -38,59 +38,16 @@ namespace Demo
             return oAdaptador;
         }
 
-        private static void Update(DataSet DS) {
-            bool OkFlag = true;
-            if (DS.HasErrors) {
-                OkFlag = false;
-                String sMsg = "Error en la fila con el tipo: ";
-                foreach (DataTable theTable in DS.Tables)
-                {
-                    // If any table has errors, find out which rows
-                    if (theTable.HasErrors)
-                    {
-                        // Get the rows with errors
-                        DataRow[] errorRows = theTable.GetErrors();
+   
+        //private static void DefineTipoSchema(DataTable table)
+        //{
+        //    DataColumn cTipo = table.Columns.Add("Tipo", typeof(String));
+        //    cTipo.AllowDBNull = false;
+        //    table.PrimaryKey = new DataColumn[] { cTipo };
 
-                        // iterate through the errors and correct
-                        // (in our case, just identify)
-                        foreach (DataRow theRow in errorRows)
-                        {
-                            sMsg = sMsg + theRow["CustomerID"];
-                        }
-                    }
-                }
-                throw new Exception( sMsg);
-                }
-            
-
-            if (OkFlag)
-            {
-                // Update the database on second dataset
-                oAdaptadorTipo.Update(DS,"Tipo");
-
-                // Inform the user
-                //lblMessage.Text = "Updated " +  targetRow["CompanyName"];
-                //Application.DoEvents();
-
-                // Accept the changes and repopulate the list box
-                DS.AcceptChanges();
-                //PopulateListBox();
-            }
-            else
-            {   // If we had errors, reject the changes
-                DS.RejectChanges();
-            }
-        }
-
-        private static void DefineTipoSchema(DataTable table)
-        {
-            DataColumn cTipo = table.Columns.Add("Tipo", typeof(String));
-            cTipo.AllowDBNull = false;
-            table.PrimaryKey = new DataColumn[] { cTipo };
-
-            DataColumn cDescr = table.Columns.Add("Descr", typeof(String));
-            cDescr.MaxLength = 50;
-        }
+        //    DataColumn cDescr = table.Columns.Add("Descr", typeof(String));
+        //    cDescr.MaxLength = 50;
+        //}
 
         
 
@@ -98,16 +55,13 @@ namespace Demo
         {
             DataSet TipoDS = new DataSet();
             DataTable tipoTable = TipoDS.Tables.Add("Tipo");
-           // DefineTipoSchema(tipoTable);
             return TipoDS;
         }
 
-        public static DataTable GetData() {
+        public static DataSet GetData() {
             DataSet TipoDS = CreateDataSetTipo();
-            //TipoDS.EnforceConstraints = false;
             oAdaptadorTipo.Fill(TipoDS.Tables["Tipo"]);
-           //TipoDS.EnforceConstraints = true;
-            return TipoDS.Tables[0];
+            return TipoDS;
         }
     }
 }
