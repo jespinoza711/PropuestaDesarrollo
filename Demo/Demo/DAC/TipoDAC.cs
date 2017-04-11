@@ -38,18 +38,6 @@ namespace Demo
             return oAdaptador;
         }
 
-   
-        //private static void DefineTipoSchema(DataTable table)
-        //{
-        //    DataColumn cTipo = table.Columns.Add("Tipo", typeof(String));
-        //    cTipo.AllowDBNull = false;
-        //    table.PrimaryKey = new DataColumn[] { cTipo };
-
-        //    DataColumn cDescr = table.Columns.Add("Descr", typeof(String));
-        //    cDescr.MaxLength = 50;
-        //}
-
-        
 
         private static DataSet CreateDataSetTipo()
         {

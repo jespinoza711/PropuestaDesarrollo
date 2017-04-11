@@ -25,8 +25,8 @@ namespace Demo
             try
             {
                 _dsSolicitud = new DataSet();
-                _dsSolicitud.Tables.Add(SolicitudDAC.GetData().Tables["Solicitud"].Copy());
-                _dsSolicitud.Tables.Add(SolicitudDetalleDAC.GetData().Tables[0].Copy());
+                _dsSolicitud.Tables.Add(SolicitudDAC.GetData("*","*").Tables["Solicitud"].Copy());
+                _dsSolicitud.Tables.Add(SolicitudDetalleDAC.GetData("*","*").Tables[0].Copy());
                 PopulateGrid();
             }
             catch (Exception ex)
