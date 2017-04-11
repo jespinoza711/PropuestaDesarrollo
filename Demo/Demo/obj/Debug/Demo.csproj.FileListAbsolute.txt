@@ -9,3 +9,7 @@ C:\Users\DESARROLLO\Desktop\PropuestaEsquema\Demo\Demo\obj\Debug\Demo.Demo.resou
 C:\Users\DESARROLLO\Desktop\PropuestaEsquema\Demo\Demo\obj\Debug\Demo.exe.licenses
 C:\Users\DESARROLLO\Desktop\PropuestaEsquema\Demo\Demo\obj\Debug\Demo.frmMasterDetail.resources
 C:\Users\DESARROLLO\Desktop\PropuestaEsquema\Demo\Demo\obj\Debug\Demo.MasterDetailSeparateGrid.resources
+C:\Users\DESARROLLO\Desktop\PropuestaEsquema\Demo\Demo\obj\Debug\Demo.frmMaestroDetalleUpdate.resources
+C:\Users\DESARROLLO\Desktop\PropuestaEsquema\Demo\Demo\bin\Debug\Newtonsoft.Json.dll
+C:\Users\DESARROLLO\Desktop\PropuestaEsquema\Demo\Demo\bin\Debug\Newtonsoft.Json.xml
+C:\Users\DESARROLLO\Desktop\PropuestaEsquema\Demo\Demo\obj\Debug\Demo.csprojResolveAssemblyReference.cache

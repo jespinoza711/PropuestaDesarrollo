@@ -16,7 +16,7 @@ namespace Demo
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MasterDetailSeparateGrid());
+            Application.Run(new frmMaestroDetalleUpdate());
         }
     }
 }
