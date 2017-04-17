@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExpress.XtraGrid.Views.Base;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Resources;
 
 namespace Demo
 {
@@ -16,10 +18,51 @@ namespace Demo
         private DataTable _dtTipo;
         private DataSet _dsTipo;
         DataRow currentRow;
+        const String _tituloVentana = "Catalogo de Tipo";
 
         public Demo()
         {
             InitializeComponent();
+            this.StartPosition = FormStartPosition.CenterScreen;
+        }
+
+        private void SetDefaultBehaviorControls() { 
+            //Grid
+            this.gridView1.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFullFocus;
+            this.gridView1.OptionsBehavior.Editable = false;
+            this.gridView1.OptionsSelection.EnableAppearanceFocusedRow = true;
+            this.gridView1.OptionsFilter.DefaultFilterEditorView = DevExpress.XtraEditors.FilterEditorViewMode.TextAndVisual;
+            
+            //Navegador
+            this.dtNavigator.Buttons.Append.Enabled = false;
+            this.dtNavigator.Buttons.Append.Visible = false;
+
+            this.dtNavigator.Buttons.CancelEdit.Enabled = false;
+            this.dtNavigator.Buttons.CancelEdit.Visible = false;
+
+            this.dtNavigator.Buttons.Remove.Enabled = false;
+            this.dtNavigator.Buttons.Remove.Visible = false;
+
+            this.dtNavigator.Buttons.EndEdit.Enabled = false;
+            this.dtNavigator.Buttons.EndEdit.Visible = false;
+
+
+            //Barra Prinicpal
+            this.bar4.OptionsBar.AllowQuickCustomization = false;
+
+            //titulo
+            this.lblTitulo.Font =  new Font(lblTitulo.Font.FontFamily, 12f, FontStyle.Bold);
+            this.lblTitulo.Size = new Size(panelTitulo.Size.Width / 2, panelTitulo.Size.Height / 2);
+            this.lblTitulo.Top = (panelTitulo.Height / 2) - (lblTitulo.Height / 2);
+            this.lblTitulo.Left = (panelTitulo.Width / 2) - (lblTitulo.Width / 2);
+            this.lblTitulo.ForeColor = Color.DodgerBlue;
+            this.lblTitulo.Text = _tituloVentana;
+
+            ////Titulo e Icono de la ventana
+            this.Text = _tituloVentana;
+            this.Icon = Properties.Resources.Icon1;
+            
+            
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -28,6 +71,9 @@ namespace Demo
             {
                 HabilitarControles(false);
                 _dsTipo = TipoDAC.GetData();
+
+                SetDefaultBehaviorControls();
+                
                 PopulateGrid();        
             }
             catch (Exception ex) {
@@ -38,6 +84,7 @@ namespace Demo
         private void PopulateGrid() {
             _dtTipo = _dsTipo.Tables[0];
             this.dtgTipo.DataSource = _dtTipo;
+            this.dtNavigator.DataSource = _dtTipo;
         }
 
         private void ClearControls() {
@@ -54,6 +101,7 @@ namespace Demo
             this.btnGuardar.Enabled = Activo;
             this.btnCancelar.Enabled = Activo;
             this.btnEliminar.Enabled = !Activo;
+            this.dtNavigator.Enabled = !Activo;
         }
 
         private void SetCurrentRow() {
@@ -70,43 +118,48 @@ namespace Demo
             this.txtDescr.Text = Row["Descr"].ToString();
         }
         
-        private void btnEditar_Click(object sender, EventArgs e)
-        {           
-            if (currentRow == null)
-            {
-                lblMessage.Text = "Por favor seleccione un elemento de la Lista";
-                return;
-            }
-            else
-                lblMessage.Text = "";
-            HabilitarControles(true);
-            lblMessage.Text = "Editando el registro : " + currentRow["Descr"].ToString();   
-        }
+   
 
         private void gridView1_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e)
         {
             SetCurrentRow();
         }
 
-        private void btnAgregar_Click(object sender, EventArgs e)
+   
+        
+
+        private void btnAgregar_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             HabilitarControles(true);
             ClearControls();
             currentRow = null;
         }
 
-        private void btnGuardar_Click(object sender, EventArgs e)
+        private void btnEditar_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (currentRow == null)
+            {
+                lblStatus.Caption = "Por favor seleccione un elemento de la Lista";
+                return;
+            }
+            else
+                lblStatus.Caption = "";
+            HabilitarControles(true);
+            lblStatus.Caption= "Editando el registro : " + currentRow["Descr"].ToString();   
+        }
+
+        private void btnGuardar_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             if (currentRow != null)
             {
-                lblMessage.Text = "Actualizando : " + currentRow["Descr"].ToString();
+                lblStatus.Caption = "Actualizando : " + currentRow["Descr"].ToString();
 
                 Application.DoEvents();
                 currentRow.BeginEdit();
-               
+
                 currentRow["Tipo"] = this.txtTipo.Text.Trim();
                 currentRow["Descr"] = this.txtDescr.Text.Trim();
-               
+
                 currentRow.EndEdit();
 
                 DataSet _dsChanged = _dsTipo.GetChanges(DataRowState.Modified);
@@ -130,7 +183,7 @@ namespace Demo
                         }
                     }
 
-                    lblMessage.Text = msg;
+                    lblStatus.Caption = msg;
                 }
 
                 //Si no hay errores
@@ -138,7 +191,7 @@ namespace Demo
                 if (okFlag)
                 {
                     TipoDAC.oAdaptadorTipo.Update(_dsChanged, "Tipo");
-                    lblMessage.Text = "Actualizado " + currentRow["Descr"].ToString();
+                    lblStatus.Caption = "Actualizado " + currentRow["Descr"].ToString();
                     Application.DoEvents();
 
                     _dsTipo.AcceptChanges();
@@ -148,10 +201,11 @@ namespace Demo
                 else
                 {
                     _dsTipo.RejectChanges();
-                    
+
                 }
             }
-            else { 
+            else
+            {
                 //nuevo registro
                 currentRow = _dtTipo.NewRow();
                 currentRow["Tipo"] = this.txtTipo.Text.Trim();
@@ -162,13 +216,16 @@ namespace Demo
                     TipoDAC.oAdaptadorTipo.Update(_dsTipo, "Tipo");
                     _dsTipo.AcceptChanges();
 
-                    lblMessage.Text = "Se ha ingresado un nuevo registro";
+                    lblStatus.Caption = "Se ha ingresado un nuevo registro";
                     Application.DoEvents();
                     PopulateGrid();
                     ClearControls();
                     HabilitarControles(false);
+                    ColumnView view = this.gridView1;
+                    view.MoveLast();
                 }
-                catch (System.Data.SqlClient.SqlException ex) {
+                catch (System.Data.SqlClient.SqlException ex)
+                {
                     _dsTipo.RejectChanges();
                     currentRow = null;
                     MessageBox.Show(ex.Message);
@@ -176,34 +233,40 @@ namespace Demo
             }
             
         }
-        
-        private void btnEliminar_Click(object sender, EventArgs e)
-        {
-            if (currentRow != null) {
-                string msg = currentRow["Descr"] + " eliminado..";
-                currentRow.Delete();
 
-                try
-                {
-                    TipoDAC.oAdaptadorTipo.Update(_dsTipo, "Tipo");
-                    _dsTipo.AcceptChanges();
-
-                    PopulateGrid();
-                    lblMessage.Text = msg;
-                    Application.DoEvents();
-                }
-                catch (System.Data.SqlClient.SqlException ex) {
-                    _dsTipo.RejectChanges();
-                    MessageBox.Show(ex.Message);
-                }
-            }
-        }
-
-        private void btnCancelar_Click(object sender, EventArgs e)
+        private void btnCancelar_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             HabilitarControles(false);
             SetCurrentRow();
-            this.lblMessage.Text = "";
+            lblStatus.Caption = "";
+        }
+
+        private void btnEliminar_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (currentRow != null)
+            {
+                string msg = currentRow["Descr"] + " eliminado..";
+
+                if (MessageBox.Show("Esta seguro que desea eliminar el elemento: " + currentRow["Descr"].ToString(), _tituloVentana, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    currentRow.Delete();
+
+                    try
+                    {
+                        TipoDAC.oAdaptadorTipo.Update(_dsTipo, "Tipo");
+                        _dsTipo.AcceptChanges();
+
+                        PopulateGrid();
+                        lblStatus.Caption = msg;
+                        Application.DoEvents();
+                    }
+                    catch (System.Data.SqlClient.SqlException ex)
+                    {
+                        _dsTipo.RejectChanges();
+                        MessageBox.Show(ex.Message);
+                    }
+                }
+            }
         }
     }
 }
