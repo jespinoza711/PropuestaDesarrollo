@@ -18,9 +18,10 @@ namespace Demo
         private DataSet _dsSolicitud;
         private DataSet _dsDetalle;
         private DataRow _currentRow;
-        private String Accion=  "Add";
+        private String Accion=  "NEW";
         String sCodSucursal= "JT01";
         String sUsuario = "jespinoza";
+        String _tituloVentana = "Maestro de Solicitudes";
 
         public frmMaestroDetalleUpdate()
         {
@@ -29,12 +30,57 @@ namespace Demo
             //Obtener el Siguiente consecutivo de la solicitud"
             _dsSolicitud = SolicitudDAC.GetData(sCodSucursal, "");
             _dtSolicitud = _dsSolicitud.Tables[0];
+            InicializarNuevoElemento();
+            this.StartPosition = FormStartPosition.CenterScreen;
+
+        }
+
+        private void InicializarNuevoElemento()
+        {
             _currentRow = _dtSolicitud.NewRow();
             _currentRow["NumSolicitud"] = SolicitudDAC.GetNextConsecutivo(sCodSucursal);
             _currentRow["CodSucursal"] = sCodSucursal;
             _currentRow["FechaSolicitud"] = DateTime.Now;
             _currentRow["Estado"] = "INI";
             _currentRow["UsuarioSolicitud"] = sUsuario;
+        }
+
+        private void SetDefaultBehaviorControls()
+        {
+            //Grid
+            this.gridViewDetalle.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFullFocus;
+            //this.gridViewDetalle.OptionsBehavior.Editable = false;
+            this.gridViewDetalle.OptionsSelection.EnableAppearanceFocusedRow = true;
+            this.gridViewDetalle.OptionsFilter.DefaultFilterEditorView = DevExpress.XtraEditors.FilterEditorViewMode.TextAndVisual;
+
+            //Navegador
+            this.dtNavigator.Buttons.Append.Enabled = false;
+            this.dtNavigator.Buttons.Append.Visible = false;
+
+            this.dtNavigator.Buttons.CancelEdit.Enabled = false;
+            this.dtNavigator.Buttons.CancelEdit.Visible = false;
+
+            this.dtNavigator.Buttons.Remove.Enabled = false;
+            this.dtNavigator.Buttons.Remove.Visible = false;
+
+            this.dtNavigator.Buttons.EndEdit.Enabled = false;
+            this.dtNavigator.Buttons.EndEdit.Visible = false;
+
+
+            //Barra Prinicpal
+            this.bar1.OptionsBar.AllowQuickCustomization = false;
+
+            //titulo
+            this.lblTitulo.Font = new Font(lblTitulo.Font.FontFamily, 12f, FontStyle.Bold);
+            this.lblTitulo.Size = new Size(panelTitulo.Size.Width / 2, panelTitulo.Size.Height / 2);
+            this.lblTitulo.Top = (panelTitulo.Height / 2) - (lblTitulo.Height / 2);
+            this.lblTitulo.Left = (panelTitulo.Width / 2) - (lblTitulo.Width / 2);
+            this.lblTitulo.ForeColor = Color.DodgerBlue;
+            this.lblTitulo.Text = _tituloVentana;
+
+            ////Titulo e Icono de la ventana
+            this.Text = _tituloVentana;
+            this.Icon = Properties.Resources.Icon1;
 
 
         }
@@ -67,6 +113,7 @@ namespace Demo
             _dsDetalle = SolicitudDetalleDAC.GetData(_currentRow["CodSucursal"].ToString(), _currentRow["NumSolicitud"].ToString());
             _dtDetalle = _dsDetalle.Tables[0];
             this.dtgDetalle.DataSource = _dtDetalle;
+           // this.dtNavigator.DataSource = _dtDetalle;
         }
 
         private void ClearControls() {
@@ -85,9 +132,17 @@ namespace Demo
             gridViewDetalle.OptionsView.NewItemRowPosition = DevExpress.XtraGrid.Views.Grid.NewItemRowPosition.Top;
         }
 
+        
         private void HabilitarControles(bool Activo) {
-            this.layoutControls.Enabled = Activo;
-            this.dtgDetalle.Enabled = Activo;
+            this.txtCodSucursal.ReadOnly = !Activo;
+            this.txtDescr.ReadOnly = !Activo;
+            this.txtEstado.ReadOnly = !Activo;
+            this.txtFecha.ReadOnly = !Activo;
+            this.txtNumSolicitud.ReadOnly = !Activo;
+            this.txtUsuario.ReadOnly=!Activo;
+            this.slkupCategoria.ReadOnly = !Activo;
+            this.gridViewDetalle.OptionsBehavior.Editable =Activo;
+            
             this.btnAgregar.Enabled = !Activo;
             this.btnEditar.Enabled = !Activo;
             this.btnGuardar.Enabled = Activo;
@@ -100,6 +155,9 @@ namespace Demo
             try
             {
                 HabilitarControles(true);
+
+                SetDefaultBehaviorControls();
+                
                 UpdateControlsFromDataRow(_currentRow);
 
                 //Configurar searchLookUp
@@ -137,7 +195,18 @@ namespace Demo
             view.SetRowCellValue(e.RowHandle, view.Columns["CodSucursal"], _currentRow["CodSucursal"]);
         }
 
-        private void btnEditar_Click(object sender, EventArgs e)
+
+
+        private void btnAgregar_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            HabilitarControles(true);
+            ClearControls();
+            InicializarNuevoElemento();
+            UpdateControlsFromDataRow(_currentRow);
+            //_currentRow = null;
+        }
+
+        private void btnEditar_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             Accion = "Edit";
             if (_currentRow == null)
@@ -153,9 +222,9 @@ namespace Demo
 
         }
 
-        private void btnGuardar_Click(object sender, EventArgs e)
+        private void btnGuardar_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            if (Accion=="Edit")
+            if (Accion == "Edit")
             {
                 lblStatusBar.Caption = "Actualizando : " + _currentRow["NumSolicitud"].ToString();
 
@@ -168,7 +237,7 @@ namespace Demo
                 _currentRow["Estado"] = this.txtEstado.Text.Trim();
                 _currentRow["UsuarioSolicitud"] = this.txtUsuario.Text.Trim();
                 _currentRow["FechaSolicitud"] = this.txtFecha.Text.Trim();
-                
+
                 _currentRow.EndEdit();
 
                 DataSet _dsChanged = _dsSolicitud.GetChanges(DataRowState.Modified);
@@ -199,20 +268,20 @@ namespace Demo
 
                 if (okFlag)
                 {
-                   
+
                     SolicitudDAC.oAdaptadorSolicitud.Update(_dsChanged, "Solicitud");
                     this.lblStatusBar.Caption = "Actualizado " + _currentRow["Numsolicitud"].ToString();
                     Application.DoEvents();
 
                     _dsSolicitud.AcceptChanges();
-                    
+
                     PopulateGrid();
                     HabilitarControles(false);
                 }
                 else
                 {
                     _dsSolicitud.RejectChanges();
-                   
+
 
                 }
             }
@@ -245,7 +314,7 @@ namespace Demo
                     ConnectionManager.CommitTran();
                     SolicitudDAC.SetTransactionToAdaptador(false);
                     SolicitudDetalleDAC.SetTransactionToAdaptador(false);
-                    
+
                     this.lblStatusBar.Caption = "Se ha ingresado un nuevo registro";
                     Application.DoEvents();
                     PopulateGrid();
@@ -255,56 +324,45 @@ namespace Demo
                 {
                     _dsSolicitud.RejectChanges();
                     _dsDetalle.RejectChanges();
-                   // _currentRow = null;
+                    // _currentRow = null;
                     ConnectionManager.RollBackTran();
                     MessageBox.Show(ex.Message);
                 }
             }
-            
         }
 
-        private void btnCancelar_Click(object sender, EventArgs e)
+        private void btnCancelar_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             HabilitarControles(false);
             UpdateControlsFromDataRow(_currentRow);
             this.lblStatusBar.Caption = "";
         }
 
-        private void btnEliminar_Click(object sender, EventArgs e)
+        private void btnEliminar_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             if (_currentRow != null)
             {
-                string msg = _currentRow["NumSolicitud"] + " eliminado..";
-                _currentRow.Delete();
-
-                try
+                if (MessageBox.Show("Esta seguro que desea eliminar el elemento: " + _currentRow["NumSolicitud"].ToString(), _tituloVentana, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
                 {
-                    TipoDAC.oAdaptadorTipo.Update(_dsSolicitud, "Tipo");
-                    _dsSolicitud.AcceptChanges();
+                    string msg = _currentRow["NumSolicitud"] + " eliminado..";
+                    _currentRow.Delete();
 
-                    PopulateGrid();
-                    this.lblStatusBar.Caption = msg;
-                    Application.DoEvents();
-                }
-                catch (System.Data.SqlClient.SqlException ex)
-                {
-                    _dsSolicitud.RejectChanges();
-                    MessageBox.Show(ex.Message);
+                    try
+                    {
+                        TipoDAC.oAdaptadorTipo.Update(_dsSolicitud, "Tipo");
+                        _dsSolicitud.AcceptChanges();
+
+                        PopulateGrid();
+                        this.lblStatusBar.Caption = msg;
+                        Application.DoEvents();
+                    }
+                    catch (System.Data.SqlClient.SqlException ex)
+                    {
+                        _dsSolicitud.RejectChanges();
+                        MessageBox.Show(ex.Message);
+                    }
                 }
             }
-        }
-
-        private void btnAgregar_Click(object sender, EventArgs e)
-        {
-            HabilitarControles(true);
-            ClearControls();
-            _currentRow = null;
-        }
-
-        private void simpleButton1_Click(object sender, EventArgs e)
-        {
-            DataTable dt = (DataTable)this.dtgDetalle.DataSource;
-            MessageBox.Show(dt.Rows.Count.ToString());
         }
     }
 }

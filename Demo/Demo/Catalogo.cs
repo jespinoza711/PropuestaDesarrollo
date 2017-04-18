@@ -93,9 +93,10 @@ namespace Demo
         }
 
         private void HabilitarControles(bool Activo) {
-            this.txtTipo.Enabled = Activo;
-            this.txtDescr.Enabled = Activo;
+            this.txtTipo.ReadOnly = !Activo;
+            this.txtDescr.ReadOnly = !Activo;
             this.dtgTipo.Enabled = !Activo;
+
             this.btnAgregar.Enabled = !Activo;
             this.btnEditar.Enabled = !Activo;
             this.btnGuardar.Enabled = Activo;
