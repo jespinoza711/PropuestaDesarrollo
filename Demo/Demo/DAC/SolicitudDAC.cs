@@ -90,6 +90,22 @@ namespace Demo
             oAdaptador.Fill(DS, "Consecutivo");
             return DS.Tables[0].Rows[0][0].ToString() ;
         }
+
+
+        public static Task<DataSet> GetDataAsync(String CodSucursal, String NumSolicitud)
+        {
+            return Task.Factory.StartNew<DataSet>(() => {
+                DataSet DS = CreateDataSet();
+                oAdaptadorSolicitud.SelectCommand.Parameters["@CodSucursal"].Value = CodSucursal;
+                oAdaptadorSolicitud.SelectCommand.Parameters["@NumSolicitud"].Value = NumSolicitud;
+                oAdaptadorSolicitud.Fill(DS.Tables["Solicitud"]);
+                return DS;
+            });
+           
+            
+        }
+
      
+
     }
 }

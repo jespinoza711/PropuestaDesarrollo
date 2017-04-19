@@ -68,7 +68,8 @@ namespace Demo
             try
             {
                 HabilitarControles(false);
-                _dsSolicitud = SolicitudDAC.GetData("*","*");
+                _dsSolicitud = SolicitudDAC.GetDataAsync("*","*").Result;
+                
 
                 SetDefaultBehaviorControls();
 
