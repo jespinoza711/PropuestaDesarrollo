@@ -380,44 +380,26 @@ namespace Demo
                 if (MessageBox.Show("Esta seguro que desea eliminar el elemento: " + _currentRow["NumSolicitud"].ToString(), _tituloVentana, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
                 {
                     string msg = _currentRow["NumSolicitud"] + " eliminado..";
+                    string sNumSolicitud = _currentRow["NumSolicitud"].ToString();
                     _currentRow.Delete();
 
-                    SolicitudDetalleDAC.oAdaptadorSolicitud.ContinueUpdateOnError = true;
-                    
                     try
                     {
                         ConnectionManager.BeginTran();
                         SolicitudDAC.SetTransactionToAdaptador(true);
-                        SolicitudDetalleDAC.SetTransactionToAdaptador(true);
-
-                        for (int i = _dtDetalle.Rows.Count - 1; i >= 0; i--)
-                        {
-                            _dsDetalle.Tables[0].Rows[i].Delete();
-                            _dsDetalle.AcceptChanges();
-
-                        }
 
 
-                        SolicitudDetalleDAC.oAdaptadorSolicitud.Update(_dsDetalle, "SolicitudDetalle");
-                        
+                        System.Data.SqlClient.SqlCommand oCmd = new System.Data.SqlClient.SqlCommand("Delete from fnica.solSolicituddetalle where numsolicitud=@Solicitud", ConnectionManager.GetConnection(), ConnectionManager.Tran);
+                        oCmd.Parameters.Add("@Solicitud", SqlDbType.NVarChar).Value = sNumSolicitud;
+                        int i = oCmd.ExecuteNonQuery();
 
-                        
-
-                        
-                        //foreach (DataRow row in _dtDetalle.Rows)
-                        //{
-                        //    row.Delete();
-                        //    SolicitudDetalleDAC.oAdaptadorSolicitud.Update(_dsDetalle, "SolicitudDetalle");
-                        //    _dsDetalle.AcceptChanges();
-                        //}
-                        //
                         SolicitudDAC.oAdaptadorSolicitud.Update(_dsSolicitud, "Solicitud");
                         _dsSolicitud.AcceptChanges();
                        
 
                         ConnectionManager.CommitTran();
                         SolicitudDAC.SetTransactionToAdaptador(false);
-                        SolicitudDetalleDAC.SetTransactionToAdaptador(false);
+                        
 
                         PopulateGrid();
                         this.lblStatusBar.Caption = msg;
