@@ -70,7 +70,6 @@ namespace Demo
                 HabilitarControles(false);
                 _dsSolicitud = SolicitudDAC.GetDataAsync("*","*").Result;
                 
-
                 SetDefaultBehaviorControls();
 
                 PopulateGrid();
@@ -126,15 +125,9 @@ namespace Demo
 
         private void btnEditar_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            //if (currentRow == null)
-            //{
-            //    lblStatus.Caption = "Por favor seleccione un elemento de la Lista";
-            //    return;
-            //}
-            //else
-            //    lblStatus.Caption = "";
+            
             HabilitarControles(true);
-            //lblStatus.Caption= "Editando el registro : " + currentRow["Descr"].ToString();   
+            
         }
 
      
@@ -182,7 +175,49 @@ namespace Demo
             }
         }
 
-     
+        private void btnEliminar_ItemClick_1(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (currentRow != null)
+            {
+                if (MessageBox.Show("Esta seguro que desea eliminar el elemento: " + currentRow["NumSolicitud"].ToString(), _tituloVentana, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    string msg = currentRow["NumSolicitud"] + " eliminado..";
+                    string sNumSolicitud = currentRow["NumSolicitud"].ToString();
+                    currentRow.Delete();
+
+                    try
+                    {
+                        ConnectionManager.BeginTran();
+                        SolicitudDAC.SetTransactionToAdaptador(true);
+
+
+                        System.Data.SqlClient.SqlCommand oCmd = new System.Data.SqlClient.SqlCommand("Delete from fnica.solSolicituddetalle where numsolicitud=@Solicitud", ConnectionManager.GetConnection(), ConnectionManager.Tran);
+                        oCmd.Parameters.Add("@Solicitud", SqlDbType.NVarChar).Value = sNumSolicitud;
+                        int i = oCmd.ExecuteNonQuery();
+
+                        SolicitudDAC.oAdaptadorSolicitud.Update(_dsSolicitud, "Solicitud");
+                        _dsSolicitud.AcceptChanges();
+
+
+                        ConnectionManager.CommitTran();
+                        SolicitudDAC.SetTransactionToAdaptador(false);
+
+
+                        PopulateGrid();
+                        //this.lblStatusBar.Caption = msg;
+                        Application.DoEvents();
+
+          
+                    }
+                    catch (System.Data.SqlClient.SqlException ex)
+                    {
+                        ConnectionManager.RollBackTran();
+                        _dsSolicitud.RejectChanges();
+                        MessageBox.Show(ex.Message);
+                    }
+                }
+            }
+        }
     }
     
 }

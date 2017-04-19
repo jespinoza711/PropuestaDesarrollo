@@ -209,7 +209,6 @@
             this.gridViewDetalle.Name = "gridViewDetalle";
             this.gridViewDetalle.NewItemRowText = "Agregar elemento";
             this.gridViewDetalle.InitNewRow += new DevExpress.XtraGrid.Views.Grid.InitNewRowEventHandler(this.gridViewDetalle_InitNewRow);
-            this.gridViewDetalle.RowUpdated += new DevExpress.XtraGrid.Views.Base.RowObjectEventHandler(this.gridViewDetalle_RowUpdated);
             this.gridViewDetalle.ValidatingEditor += new DevExpress.XtraEditors.Controls.BaseContainerValidateEditorEventHandler(this.gridViewDetalle_ValidatingEditor);
             // 
             // NumSolicitud

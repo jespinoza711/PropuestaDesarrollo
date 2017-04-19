@@ -19,6 +19,7 @@ namespace Demo
 
         private DataSet _dsSolicitud;
         private DataSet _dsDetalle;
+
         private DataRow _currentRow;
         private String Accion=  "NEW";
         String sCodSucursal= "JT01";
@@ -32,7 +33,6 @@ namespace Demo
             //Obtener el Siguiente consecutivo de la solicitud"
             _dsSolicitud = SolicitudDAC.GetData(sCodSucursal, "");
             _dtSolicitud = _dsSolicitud.Tables[0];
-           // _currentRow = _dtSolicitud.Rows[0];
             InicializarNuevoElemento();
             this.StartPosition = FormStartPosition.CenterScreen;
 
@@ -48,44 +48,36 @@ namespace Demo
             _currentRow["UsuarioSolicitud"] = sUsuario;
         }
 
-        private void SetDefaultBehaviorControls()
-        {
-            //Grid
-            this.gridViewDetalle.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFullFocus;
-            //this.gridViewDetalle.OptionsBehavior.Editable = false;
-            this.gridViewDetalle.OptionsSelection.EnableAppearanceFocusedRow = true;
-            this.gridViewDetalle.OptionsFilter.DefaultFilterEditorView = DevExpress.XtraEditors.FilterEditorViewMode.TextAndVisual;
-            this.gridViewDetalle.EditFormPrepared += gridViewDetalle_EditFormPrepared;
-            this.gridViewDetalle.NewItemRowText = Util.constNewItemTextGrid;
-            this.gridViewDetalle.ValidatingEditor+=gridViewDetalle_ValidatingEditor;
-            this.gridViewDetalle.OptionsView.ShowAutoFilterRow = true;
-            //Barra Prinicpal
-            this.bar1.OptionsBar.AllowQuickCustomization = false;
+        //private void SetDefaultBehaviorControls()
+        //{
+        //    //Grid
+        //    this.gridViewDetalle.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFullFocus;
+        //    //this.gridViewDetalle.OptionsBehavior.Editable = false;
+        //    this.gridViewDetalle.OptionsSelection.EnableAppearanceFocusedRow = true;
+        //    this.gridViewDetalle.OptionsFilter.DefaultFilterEditorView = DevExpress.XtraEditors.FilterEditorViewMode.TextAndVisual;
+        //    this.gridViewDetalle.EditFormPrepared += gridViewDetalle_EditFormPrepared;
+        //    this.gridViewDetalle.NewItemRowText = Util.constNewItemTextGrid;
+        //    this.gridViewDetalle.ValidatingEditor+=gridViewDetalle_ValidatingEditor;
+        //    this.gridViewDetalle.OptionsView.ShowAutoFilterRow = true;
+        //    //Barra Prinicpal
+        //    this.bar1.OptionsBar.AllowQuickCustomization = false;
             
-            //titulo
-            this.lblTitulo.Font = new Font(lblTitulo.Font.FontFamily, 12f, FontStyle.Bold);
-            this.lblTitulo.Size = new Size(panelTitulo.Size.Width / 2, panelTitulo.Size.Height / 2);
-            this.lblTitulo.Top = (panelTitulo.Height / 2) - (lblTitulo.Height / 2);
-            this.lblTitulo.Left = (panelTitulo.Width / 2) - (lblTitulo.Width / 2);
-            this.lblTitulo.ForeColor = Color.DodgerBlue;
-            this.lblTitulo.Text = _tituloVentana;
+        //    //titulo
+        //    this.lblTitulo.Font = new Font(lblTitulo.Font.FontFamily, 12f, FontStyle.Bold);
+        //    this.lblTitulo.Size = new Size(panelTitulo.Size.Width / 2, panelTitulo.Size.Height / 2);
+        //    this.lblTitulo.Top = (panelTitulo.Height / 2) - (lblTitulo.Height / 2);
+        //    this.lblTitulo.Left = (panelTitulo.Width / 2) - (lblTitulo.Width / 2);
+        //    this.lblTitulo.ForeColor = Color.DodgerBlue;
+        //    this.lblTitulo.Text = _tituloVentana;
 
-            ////Titulo e Icono de la ventana
-            this.Text = _tituloVentana;
-            this.Icon = Properties.Resources.Icon1;
+        //    ////Titulo e Icono de la ventana
+        //    this.Text = _tituloVentana;
+        //    this.Icon = Properties.Resources.Icon1;
 
 
-        }
+        //}
 
-        void gridViewDetalle_EditFormPrepared(object sender, EditFormPreparedEventArgs e)
-        {
-            Control ctrl = Util.FindControl(e.Panel, "Update");
-            if (ctrl != null)
-                ctrl.Text = "Actualizar";
-            ctrl = Util.FindControl(e.Panel, "Cancel");
-            if (ctrl != null)
-                ctrl.Text = "Cancelar";
-        }
+       
 
         public frmMaestroDetalleUpdate(DataSet ds,DataRow dr)
         {
@@ -159,9 +151,13 @@ namespace Demo
             {
                 HabilitarControles(true);
 
-                SetDefaultBehaviorControls();
-                
-               
+                //SetDefaultBehaviorControls();
+                Util.SetDefaultBehaviorControls(this.gridViewDetalle,true, null, this.bar1, this.lblTitulo, this.panelTitulo, _tituloVentana, this);
+
+                this.gridViewDetalle.EditFormPrepared += gridViewDetalle_EditFormPrepared;
+                this.gridViewDetalle.NewItemRowText = Util.constNewItemTextGrid;
+                this.gridViewDetalle.ValidatingEditor += gridViewDetalle_ValidatingEditor;
+
 
                 //Configurar searchLookUp
 
@@ -180,6 +176,16 @@ namespace Demo
             }
         }
 
+        void gridViewDetalle_EditFormPrepared(object sender, EditFormPreparedEventArgs e)
+        {
+            Control ctrl = Util.FindControl(e.Panel, "Update");
+            if (ctrl != null)
+                ctrl.Text = "Actualizar";
+            ctrl = Util.FindControl(e.Panel, "Cancel");
+            if (ctrl != null)
+                ctrl.Text = "Cancelar";
+        }
+
         void dtgDetalle_ProcessGridKey(object sender, KeyEventArgs e)
         {
             var grid = sender as GridControl;
@@ -193,18 +199,6 @@ namespace Demo
                 }
                 else
                     e.Handled = false;
-            }
-        }
-
-        private void gridViewDetalle_RowUpdated(object sender, DevExpress.XtraGrid.Views.Base.RowObjectEventArgs e)
-        {
-            try
-            {
-                DataRowView dr = (DataRowView)e.Row;
-              
-            }
-            catch (Exception ex) {
-                MessageBox.Show(ex.Message);
             }
         }
 
@@ -224,7 +218,7 @@ namespace Demo
             Accion = "New";
             InicializarNuevoElemento();
             UpdateControlsFromDataRow(_currentRow);
-            //_currentRow = null;
+            
         }
 
         private void btnEditar_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -323,7 +317,7 @@ namespace Demo
             else
             {
                 //nuevo registro
-                //_currentRow = _dtSolicitud.NewRow();
+                
                 _currentRow["NumSolicitud"] = this.txtNumSolicitud.Text.Trim();
                 _currentRow["CodSucursal"] = this.txtCodSucursal.Text.Trim();
                 _currentRow["CodCategoria"] = this.slkupCategoria.EditValue;
@@ -359,7 +353,6 @@ namespace Demo
                 {
                     _dsSolicitud.RejectChanges();
                     _dsDetalle.RejectChanges();
-                    // _currentRow = null;
                     ConnectionManager.RollBackTran();
                     MessageBox.Show(ex.Message);
                 }
@@ -404,6 +397,8 @@ namespace Demo
                         PopulateGrid();
                         this.lblStatusBar.Caption = msg;
                         Application.DoEvents();
+
+                        this.Close();
                     }
                     catch (System.Data.SqlClient.SqlException ex)
                     {
@@ -415,10 +410,7 @@ namespace Demo
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show(this.slkupCategoria.EditValue.ToString());
-        }
+
 
         private void gridViewDetalle_ValidatingEditor(object sender, DevExpress.XtraEditors.Controls.BaseContainerValidateEditorEventArgs e)
         {

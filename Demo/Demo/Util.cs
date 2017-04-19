@@ -15,7 +15,7 @@ namespace Demo
     {
         //constantes
         public const String constNewItemTextGrid="Click para agregar un nuevo elemento";
-
+    
 
         public static void ConfigLookupEdit(SearchLookUpEdit lkupControl, Object DataSource,
                                          String DisplayMember, String ValueMember, int WinPopupWidth = 250, int WinPopupHeigth = 200)
@@ -84,6 +84,55 @@ namespace Demo
                 if (found != null) return found;
             }
             return null;
+        }
+
+
+        public static void SetDefaultBehaviorControls(DevExpress.XtraGrid.Views.Grid.GridView pGridView, bool pEditable,
+                                                            DevExpress.XtraGrid.GridControl pGrid,
+                                                                     DevExpress.XtraBars.Bar pBar,
+                                                   DevExpress.XtraEditors.LabelControl plblTitulo,
+                                                 DevExpress.XtraEditors.PanelControl pPanelTitulo,
+                                                                            String _tituloVentana,
+                                                                   System.Windows.Forms.Form pForm)
+        {
+            //Grid
+            pGridView.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFullFocus;
+            pGridView.OptionsBehavior.Editable = pEditable;
+            pGridView.OptionsSelection.EnableAppearanceFocusedRow = true;
+            pGridView.OptionsFilter.DefaultFilterEditorView = DevExpress.XtraEditors.FilterEditorViewMode.TextAndVisual;
+            pGridView.OptionsView.ShowAutoFilterRow = true;
+            //Navegador
+            if (pGrid != null)
+            {
+                pGrid.EmbeddedNavigator.Buttons.Append.Enabled = false;
+                pGrid.EmbeddedNavigator.Buttons.Append.Visible = false;
+
+                pGrid.EmbeddedNavigator.Buttons.CancelEdit.Enabled = false;
+                pGrid.EmbeddedNavigator.Buttons.CancelEdit.Visible = false;
+
+                pGrid.EmbeddedNavigator.Buttons.Remove.Enabled = false;
+                pGrid.EmbeddedNavigator.Buttons.Remove.Visible = false;
+
+                pGrid.EmbeddedNavigator.Buttons.EndEdit.Enabled = false;
+                pGrid.EmbeddedNavigator.Buttons.EndEdit.Visible = false;
+                pGrid.EmbeddedNavigator.Enabled = true;
+            }
+            //Barra Prinicpal
+            pBar.OptionsBar.AllowQuickCustomization = false;
+
+            //titulo
+            plblTitulo.Font = new Font(plblTitulo.Font.FontFamily, 12f, FontStyle.Bold);
+            plblTitulo.Size = new Size(pPanelTitulo.Size.Width / 2, pPanelTitulo.Size.Height / 2);
+            plblTitulo.Top = (pPanelTitulo.Height / 2) - (plblTitulo.Height / 2);
+            plblTitulo.Left = (pPanelTitulo.Width / 2) - (plblTitulo.Width / 2);
+            plblTitulo.ForeColor = Color.DodgerBlue;
+            plblTitulo.Text = _tituloVentana;
+
+            ////Titulo e Icono de la ventana
+            pForm.Text = _tituloVentana;
+            pForm.Icon = Properties.Resources.Icon1;
+
+
         }
     }
 }
