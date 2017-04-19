@@ -16,7 +16,7 @@ namespace Demo
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Demo());
+            Application.Run(new frmListado());
         }
     }
 }

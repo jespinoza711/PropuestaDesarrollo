@@ -13,7 +13,7 @@ namespace Demo
         public static SqlDataAdapter oAdaptadorSolicitud = InicializarAdaptador();
 
         private static SqlDataAdapter InicializarAdaptador() {
-            String getSQL = "SELECT *  FROM fnica.solSolicitud where codSucursal=@CodSucursal and NumSolicitud=@NumSolicitud";
+            String getSQL = "SELECT *  FROM fnica.solSolicitud where (codSucursal=@CodSucursal or @CodSucursal='*') and (NumSolicitud=@NumSolicitud or @NumSolicitud='*')";
             String InsertSQL = "INSERT INTO fnica.solSolicitud        ( NumSolicitud ,          CodSucursal ,          CodCategoria ,          Descripcion ,          Estado ,          UsuarioSolicitud ,          FechaSolicitud        ) VALUES  ( @NumSolicitud ,          @CodSucursal ,          @CodCategoria ,          @Descripcion ,          @Estado ,          @UsuarioSolicitud ,          @FechaSolicitud    )";
             String UpdateSQL = "UPDATE fnica.solSolicitud SET  CodCategoria = @CodCategoria,Descripcion = @Descripcion , Estado =@Estado WHERE NumSolicitud=@NumSolicitud and CodSucursal=@CodSucursal";
             String DeleteSQL = "DELETE  fnica.solSolicitud WHERE NumSolicitud=@NumSolicitud and CodSucursal=@CodSucursal";
@@ -46,6 +46,7 @@ namespace Demo
             oAdaptador.UpdateCommand.Parameters.Add("@CodCategoria", SqlDbType.NChar).SourceColumn = "CodCategoria";
             oAdaptador.UpdateCommand.Parameters.Add("@Descripcion", SqlDbType.NChar).SourceColumn = "Descripcion";
             oAdaptador.UpdateCommand.Parameters.Add("@Estado", SqlDbType.NChar).SourceColumn = "Estado";
+
             
             
             //Paremetros Delete 

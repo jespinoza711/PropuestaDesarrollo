@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DevExpress.XtraGrid;
+using DevExpress.XtraGrid.Views.Grid;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -30,6 +32,7 @@ namespace Demo
             //Obtener el Siguiente consecutivo de la solicitud"
             _dsSolicitud = SolicitudDAC.GetData(sCodSucursal, "");
             _dtSolicitud = _dsSolicitud.Tables[0];
+           // _currentRow = _dtSolicitud.Rows[0];
             InicializarNuevoElemento();
             this.StartPosition = FormStartPosition.CenterScreen;
 
@@ -52,24 +55,13 @@ namespace Demo
             //this.gridViewDetalle.OptionsBehavior.Editable = false;
             this.gridViewDetalle.OptionsSelection.EnableAppearanceFocusedRow = true;
             this.gridViewDetalle.OptionsFilter.DefaultFilterEditorView = DevExpress.XtraEditors.FilterEditorViewMode.TextAndVisual;
-
-            //Navegador
-            this.dtNavigator.Buttons.Append.Enabled = false;
-            this.dtNavigator.Buttons.Append.Visible = false;
-
-            this.dtNavigator.Buttons.CancelEdit.Enabled = false;
-            this.dtNavigator.Buttons.CancelEdit.Visible = false;
-
-            this.dtNavigator.Buttons.Remove.Enabled = false;
-            this.dtNavigator.Buttons.Remove.Visible = false;
-
-            this.dtNavigator.Buttons.EndEdit.Enabled = false;
-            this.dtNavigator.Buttons.EndEdit.Visible = false;
-
-
+            this.gridViewDetalle.EditFormPrepared += gridViewDetalle_EditFormPrepared;
+            this.gridViewDetalle.NewItemRowText = Util.constNewItemTextGrid;
+            this.gridViewDetalle.ValidatingEditor+=gridViewDetalle_ValidatingEditor;
+            this.gridViewDetalle.OptionsView.ShowAutoFilterRow = true;
             //Barra Prinicpal
             this.bar1.OptionsBar.AllowQuickCustomization = false;
-
+            
             //titulo
             this.lblTitulo.Font = new Font(lblTitulo.Font.FontFamily, 12f, FontStyle.Bold);
             this.lblTitulo.Size = new Size(panelTitulo.Size.Width / 2, panelTitulo.Size.Height / 2);
@@ -85,11 +77,22 @@ namespace Demo
 
         }
 
+        void gridViewDetalle_EditFormPrepared(object sender, EditFormPreparedEventArgs e)
+        {
+            Control ctrl = Util.FindControl(e.Panel, "Update");
+            if (ctrl != null)
+                ctrl.Text = "Actualizar";
+            ctrl = Util.FindControl(e.Panel, "Cancel");
+            if (ctrl != null)
+                ctrl.Text = "Cancelar";
+        }
+
         public frmMaestroDetalleUpdate(DataSet ds,DataRow dr)
         {
             InitializeComponent();
             InicializarControles();
             _dsSolicitud = ds;
+            _dtSolicitud = ds.Tables[0];
             _currentRow = dr;
             Accion = "Edit";
         }
@@ -103,7 +106,7 @@ namespace Demo
             this.txtEstado.Text = row["Estado"].ToString();
             this.txtUsuario.Text = row["UsuarioSolicitud"].ToString();
             this.txtFecha.Text = row["FechaSolicitud"].ToString();
-            this.slkupCategoria.EditValue = row["CodCategoria"].ToString();
+            this.slkupCategoria.EditValue = row["CodCategoria"].ToString().Trim();
 
             //Obtener los datos segun cabecera
             PopulateGrid();
@@ -124,7 +127,7 @@ namespace Demo
             this.txtUsuario.Text = "";
             this.txtFecha.Text = "";
             this.slkupCategoria.EditValue = null;
-            //this.dtgDetalle.DataSource = null;
+            this.dtgDetalle.DataSource = null;
         }
         
         private void InicializarControles() {
@@ -158,7 +161,7 @@ namespace Demo
 
                 SetDefaultBehaviorControls();
                 
-                UpdateControlsFromDataRow(_currentRow);
+               
 
                 //Configurar searchLookUp
 
@@ -169,10 +172,27 @@ namespace Demo
 
                 Util.ConfigLookupEdit(this.slkupCategoria, CategoriaDAC.GetData().Tables["Categoria"], "Descripcion", "CodCategoria");
                 Util.ConfigLookupEditSetViewColumns(this.slkupCategoria, "[{'ColumnCaption':'CodCategoria','ColumnField':'CodCategoria','width':30},{'ColumnCaption':'Descripcion','ColumnField':'Descripcion','width':70}]");
-
+                dtgDetalle.ProcessGridKey += dtgDetalle_ProcessGridKey;
+                UpdateControlsFromDataRow(_currentRow);
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+        void dtgDetalle_ProcessGridKey(object sender, KeyEventArgs e)
+        {
+            var grid = sender as GridControl;
+            var view = grid.FocusedView as GridView;
+            if (e.KeyData == Keys.Delete)
+            {
+                if (MessageBox.Show("Esta seguro que desea eliminar el elemento seleccionado?", "Maestro Detalle Update", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    view.DeleteSelectedRows();
+                    e.Handled = true;
+                }
+                else
+                    e.Handled = false;
             }
         }
 
@@ -201,6 +221,7 @@ namespace Demo
         {
             HabilitarControles(true);
             ClearControls();
+            Accion = "New";
             InicializarNuevoElemento();
             UpdateControlsFromDataRow(_currentRow);
             //_currentRow = null;
@@ -240,10 +261,10 @@ namespace Demo
 
                 _currentRow.EndEdit();
 
-                DataSet _dsChanged = _dsSolicitud.GetChanges(DataRowState.Modified);
+                DataSet _dsChanged = _dsSolicitud.GetChanges(DataRowState.Modified | DataRowState.Added);
 
                 bool okFlag = true;
-                if (_dsChanged.HasErrors)
+                if ( _dsChanged!=null && _dsChanged.HasErrors)
                 {
                     okFlag = false;
                     string msg = "Error en la fila con el tipo Id";
@@ -256,7 +277,7 @@ namespace Demo
 
                             foreach (DataRow dr in errosRow)
                             {
-                                msg = msg + dr["Tipo"].ToString();
+                                msg = msg + dr["NumSolicitud"].ToString();
                             }
                         }
                     }
@@ -264,16 +285,30 @@ namespace Demo
                     this.lblStatusBar.Caption = msg;
                 }
 
+
+   
+
                 //Si no hay errores
 
-                if (okFlag)
+                if (okFlag )
                 {
 
+                    ConnectionManager.BeginTran();
+                    SolicitudDAC.SetTransactionToAdaptador(true);
+                    SolicitudDetalleDAC.SetTransactionToAdaptador(true);
+
                     SolicitudDAC.oAdaptadorSolicitud.Update(_dsChanged, "Solicitud");
+                    SolicitudDetalleDAC.oAdaptadorSolicitud.Update(_dsDetalle, "SolicitudDetalle");
+                    
                     this.lblStatusBar.Caption = "Actualizado " + _currentRow["Numsolicitud"].ToString();
                     Application.DoEvents();
 
                     _dsSolicitud.AcceptChanges();
+                    _dsDetalle.AcceptChanges();
+
+                    ConnectionManager.CommitTran();
+                    SolicitudDAC.SetTransactionToAdaptador(false);
+                    SolicitudDetalleDAC.SetTransactionToAdaptador(false);
 
                     PopulateGrid();
                     HabilitarControles(false);
@@ -347,10 +382,42 @@ namespace Demo
                     string msg = _currentRow["NumSolicitud"] + " eliminado..";
                     _currentRow.Delete();
 
+                    SolicitudDetalleDAC.oAdaptadorSolicitud.ContinueUpdateOnError = true;
+                    
                     try
                     {
-                        TipoDAC.oAdaptadorTipo.Update(_dsSolicitud, "Tipo");
+                        ConnectionManager.BeginTran();
+                        SolicitudDAC.SetTransactionToAdaptador(true);
+                        SolicitudDetalleDAC.SetTransactionToAdaptador(true);
+
+                        for (int i = _dtDetalle.Rows.Count - 1; i >= 0; i--)
+                        {
+                            _dsDetalle.Tables[0].Rows[i].Delete();
+                            _dsDetalle.AcceptChanges();
+
+                        }
+
+
+                        SolicitudDetalleDAC.oAdaptadorSolicitud.Update(_dsDetalle, "SolicitudDetalle");
+                        
+
+                        
+
+                        
+                        //foreach (DataRow row in _dtDetalle.Rows)
+                        //{
+                        //    row.Delete();
+                        //    SolicitudDetalleDAC.oAdaptadorSolicitud.Update(_dsDetalle, "SolicitudDetalle");
+                        //    _dsDetalle.AcceptChanges();
+                        //}
+                        //
+                        SolicitudDAC.oAdaptadorSolicitud.Update(_dsSolicitud, "Solicitud");
                         _dsSolicitud.AcceptChanges();
+                       
+
+                        ConnectionManager.CommitTran();
+                        SolicitudDAC.SetTransactionToAdaptador(false);
+                        SolicitudDetalleDAC.SetTransactionToAdaptador(false);
 
                         PopulateGrid();
                         this.lblStatusBar.Caption = msg;
@@ -358,11 +425,38 @@ namespace Demo
                     }
                     catch (System.Data.SqlClient.SqlException ex)
                     {
+                        ConnectionManager.RollBackTran();
                         _dsSolicitud.RejectChanges();
                         MessageBox.Show(ex.Message);
                     }
                 }
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(this.slkupCategoria.EditValue.ToString());
+        }
+
+        private void gridViewDetalle_ValidatingEditor(object sender, DevExpress.XtraEditors.Controls.BaseContainerValidateEditorEventArgs e)
+        {
+            DevExpress.XtraGrid.Views.Grid.GridView view = sender as DevExpress.XtraGrid.Views.Grid.GridView;
+            DataView dataView = view.DataSource as DataView;
+            System.Collections.IEnumerator en = dataView.GetEnumerator();
+            en.Reset();
+
+            string currentCode = e.Value.ToString();
+
+            while (en.MoveNext()) {
+                DataRowView row = en.Current as DataRowView;
+                object colValue = row["Articulo"];
+                if (colValue.ToString() == currentCode)
+                {
+                    e.ErrorText = "El elemento ya existe.";
+                    e.Valid = false;
+                    break;
+                }
+            } 
         }
     }
 }

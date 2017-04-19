@@ -34,17 +34,17 @@ namespace Demo
             this.gridView1.OptionsFilter.DefaultFilterEditorView = DevExpress.XtraEditors.FilterEditorViewMode.TextAndVisual;
             
             //Navegador
-            this.dtNavigator.Buttons.Append.Enabled = false;
-            this.dtNavigator.Buttons.Append.Visible = false;
+            this.dtgTipo.EmbeddedNavigator.Buttons.Append.Enabled = false;
+            this.dtgTipo.EmbeddedNavigator.Buttons.Append.Visible = false;
 
-            this.dtNavigator.Buttons.CancelEdit.Enabled = false;
-            this.dtNavigator.Buttons.CancelEdit.Visible = false;
+            this.dtgTipo.EmbeddedNavigator.Buttons.CancelEdit.Enabled = false;
+            this.dtgTipo.EmbeddedNavigator.Buttons.CancelEdit.Visible = false;
 
-            this.dtNavigator.Buttons.Remove.Enabled = false;
-            this.dtNavigator.Buttons.Remove.Visible = false;
+            this.dtgTipo.EmbeddedNavigator.Buttons.Remove.Enabled = false;
+            this.dtgTipo.EmbeddedNavigator.Buttons.Remove.Visible = false;
 
-            this.dtNavigator.Buttons.EndEdit.Enabled = false;
-            this.dtNavigator.Buttons.EndEdit.Visible = false;
+            this.dtgTipo.EmbeddedNavigator.Buttons.EndEdit.Enabled = false;
+            this.dtgTipo.EmbeddedNavigator.Buttons.EndEdit.Visible = false;
 
 
             //Barra Prinicpal
@@ -84,7 +84,6 @@ namespace Demo
         private void PopulateGrid() {
             _dtTipo = _dsTipo.Tables[0];
             this.dtgTipo.DataSource = _dtTipo;
-            this.dtNavigator.DataSource = _dtTipo;
         }
 
         private void ClearControls() {
@@ -102,7 +101,7 @@ namespace Demo
             this.btnGuardar.Enabled = Activo;
             this.btnCancelar.Enabled = Activo;
             this.btnEliminar.Enabled = !Activo;
-            this.dtNavigator.Enabled = !Activo;
+            
         }
 
         private void SetCurrentRow() {

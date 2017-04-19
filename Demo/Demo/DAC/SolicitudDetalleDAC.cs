@@ -16,7 +16,7 @@ namespace Demo
         {
             String getSQL = "SELECT *  FROM fnica.solSolicitudDetalle where (codSucursal=@CodSucursal or @CodSucursal='*') and (NumSolicitud=@NumSolicitud or @NumSolicitud='*')" ;
             String InsertSQL = "INSERT INTO fnica.solSolicitudDetalle        ( NumSolicitud ,          Articulo ,          CodSucursal ,          CantidadSolicitada ,          CantidadAsignada ,          CantidadPendiente ,          FlgLogAdded        ) values ( @NumSolicitud ,          @Articulo ,          @CodSucursal ,          @CantidadSolicitada ,          @CantidadAsignada ,          @CantidadPendiente ,          @FlgLogAdded)";
-            String UpdateSQL = "UPDATE fnica.solSolicitudDetalle SET  CantidadAsignada=@CantidadAsignada WHERE CodSucursal=@CodSucursal AND NumSolicitud=@NumSolicitud";
+            String UpdateSQL = "UPDATE fnica.solSolicitudDetalle SET  CantidadSolicitada=@CantidadSolicitada WHERE CodSucursal=@CodSucursal AND NumSolicitud=@NumSolicitud";
             String DeleteSQL = "DELETE FROM fnica.solSolicitudDetalle WHERE CodSucursal=@CodSucursal AND NumSolicitud=@NumSolicitud";
 
             SqlDataAdapter oAdaptador = new SqlDataAdapter()
@@ -27,7 +27,7 @@ namespace Demo
                 DeleteCommand = new SqlCommand(DeleteSQL, ConnectionManager.GetConnection())
             };
 
-            //Paremetros Insert
+            //Paremetros select
             oAdaptador.SelectCommand.Parameters.Add("@CodSucursal", SqlDbType.NChar).SourceColumn = "CodSucursal";
             oAdaptador.SelectCommand.Parameters.Add("@NumSolicitud", SqlDbType.NChar).SourceColumn = "NumSolicitud";
 
@@ -36,7 +36,7 @@ namespace Demo
             oAdaptador.UpdateCommand.Parameters.Add("@NumSolicitud", SqlDbType.NChar).SourceColumn = "NumSolicitud";
             oAdaptador.UpdateCommand.Parameters.Add("@CantidadSolicitada", SqlDbType.NChar).SourceColumn = "CantidadSolicitada";
 
-            //Parametros UpdateSQL  
+            //Parametros Insert  
             oAdaptador.InsertCommand.Parameters.Add("@CodSucursal", SqlDbType.NChar).SourceColumn = "CodSucursal";
             oAdaptador.InsertCommand.Parameters.Add("@NumSolicitud", SqlDbType.NChar).SourceColumn = "NumSolicitud";
             oAdaptador.InsertCommand.Parameters.Add("@Articulo", SqlDbType.NChar).SourceColumn = "Articulo";
@@ -48,7 +48,8 @@ namespace Demo
 
             //Paremetros Insert
             oAdaptador.DeleteCommand.Parameters.Add("@CodSucursal", SqlDbType.NChar).SourceColumn = "CodSucursal";
-            oAdaptador.DeleteCommand.Parameters.Add("@NumSolicitud", SqlDbType.NChar).SourceColumn = "NumSolicitud";
+            oAdaptador.DeleteCommand.Parameters.Add("@NumSolicitud", SqlDbType.NChar).SourceColumn ="NumSolicitud";
+            
 
             return oAdaptador;
         }

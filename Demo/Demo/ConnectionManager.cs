@@ -38,7 +38,8 @@ namespace Demo
 
         public static void RollBackTran()
         {
-            Tran.Rollback();
+            if (Tran !=null)
+                Tran.Rollback();
             if (oConn.State == System.Data.ConnectionState.Open)
                 oConn.Close();
             Tran = null;

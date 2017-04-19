@@ -6,11 +6,17 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Demo
 {
+     
     public static class Util
     {
+        //constantes
+        public const String constNewItemTextGrid="Click para agregar un nuevo elemento";
+
+
         public static void ConfigLookupEdit(SearchLookUpEdit lkupControl, Object DataSource,
                                          String DisplayMember, String ValueMember, int WinPopupWidth = 250, int WinPopupHeigth = 200)
         {
@@ -67,5 +73,17 @@ namespace Demo
             lkupControl.Properties.View = lookupView;
         }
 
+
+        public static Control FindControl(this Control root, string text)
+        {
+            if (root == null) throw new ArgumentNullException("root");
+            foreach (Control child in root.Controls)
+            {
+                if (child.Text == text) return child;
+                Control found = FindControl(child, text);
+                if (found != null) return found;
+            }
+            return null;
+        }
     }
 }

@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMaestroDetalleUpdate));
             this.layoutControl1 = new DevExpress.XtraLayout.LayoutControl();
             this.panelTitulo = new DevExpress.XtraEditors.PanelControl();
+            this.lblTitulo = new DevExpress.XtraEditors.LabelControl();
             this.panelControl2 = new DevExpress.XtraEditors.PanelControl();
             this.layoutControl3 = new DevExpress.XtraLayout.LayoutControl();
             this.dtgDetalle = new DevExpress.XtraGrid.GridControl();
@@ -74,6 +75,11 @@
             this.layoutControlItem11 = new DevExpress.XtraLayout.LayoutControlItem();
             this.Manager = new DevExpress.XtraBars.BarManager(this.components);
             this.bar1 = new DevExpress.XtraBars.Bar();
+            this.btnAgregar = new DevExpress.XtraBars.BarButtonItem();
+            this.btnEditar = new DevExpress.XtraBars.BarButtonItem();
+            this.btnGuardar = new DevExpress.XtraBars.BarButtonItem();
+            this.btnCancelar = new DevExpress.XtraBars.BarButtonItem();
+            this.btnEliminar = new DevExpress.XtraBars.BarButtonItem();
             this.bar3 = new DevExpress.XtraBars.Bar();
             this.lblStatusBar = new DevExpress.XtraBars.BarStaticItem();
             this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
@@ -81,15 +87,7 @@
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
             this.barHeaderItem1 = new DevExpress.XtraBars.BarHeaderItem();
-            this.btnAgregar = new DevExpress.XtraBars.BarButtonItem();
-            this.btnEditar = new DevExpress.XtraBars.BarButtonItem();
-            this.btnGuardar = new DevExpress.XtraBars.BarButtonItem();
-            this.btnCancelar = new DevExpress.XtraBars.BarButtonItem();
-            this.btnEliminar = new DevExpress.XtraBars.BarButtonItem();
             this.barStaticItem1 = new DevExpress.XtraBars.BarStaticItem();
-            this.lblTitulo = new DevExpress.XtraEditors.LabelControl();
-            this.dtNavigator = new DevExpress.XtraEditors.DataNavigator();
-            this.layoutControlItem12 = new DevExpress.XtraLayout.LayoutControlItem();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).BeginInit();
             this.layoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.panelTitulo)).BeginInit();
@@ -131,7 +129,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem11)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Manager)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem12)).BeginInit();
             this.SuspendLayout();
             // 
             // layoutControl1
@@ -143,7 +140,7 @@
             this.layoutControl1.Location = new System.Drawing.Point(0, 31);
             this.layoutControl1.Margin = new System.Windows.Forms.Padding(2);
             this.layoutControl1.Name = "layoutControl1";
-            this.layoutControl1.OptionsCustomizationForm.DesignTimeCustomizationFormPositionAndSize = new System.Drawing.Rectangle(1175, 162, 250, 350);
+            this.layoutControl1.OptionsCustomizationForm.DesignTimeCustomizationFormPositionAndSize = new System.Drawing.Rectangle(621, 162, 250, 350);
             this.layoutControl1.Root = this.layoutControlGroup1;
             this.layoutControl1.Size = new System.Drawing.Size(819, 528);
             this.layoutControl1.TabIndex = 0;
@@ -157,6 +154,16 @@
             this.panelTitulo.Size = new System.Drawing.Size(795, 30);
             this.panelTitulo.TabIndex = 6;
             // 
+            // lblTitulo
+            // 
+            this.lblTitulo.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblTitulo.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.Horizontal;
+            this.lblTitulo.Location = new System.Drawing.Point(45, 5);
+            this.lblTitulo.Name = "lblTitulo";
+            this.lblTitulo.Size = new System.Drawing.Size(63, 13);
+            this.lblTitulo.TabIndex = 0;
+            this.lblTitulo.Text = "labelControl1";
+            // 
             // panelControl2
             // 
             this.panelControl2.Controls.Add(this.layoutControl3);
@@ -168,12 +175,11 @@
             // 
             // layoutControl3
             // 
-            this.layoutControl3.Controls.Add(this.dtNavigator);
             this.layoutControl3.Controls.Add(this.dtgDetalle);
             this.layoutControl3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layoutControl3.Location = new System.Drawing.Point(2, 2);
             this.layoutControl3.Name = "layoutControl3";
-            this.layoutControl3.OptionsCustomizationForm.DesignTimeCustomizationFormPositionAndSize = new System.Drawing.Rectangle(731, 171, 307, 385);
+            this.layoutControl3.OptionsCustomizationForm.DesignTimeCustomizationFormPositionAndSize = new System.Drawing.Rectangle(649, 171, 307, 385);
             this.layoutControl3.Root = this.layoutControlGroup3;
             this.layoutControl3.Size = new System.Drawing.Size(791, 316);
             this.layoutControl3.TabIndex = 0;
@@ -186,8 +192,9 @@
             this.dtgDetalle.Name = "dtgDetalle";
             this.dtgDetalle.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.slkupArticulo});
-            this.dtgDetalle.Size = new System.Drawing.Size(743, 223);
+            this.dtgDetalle.Size = new System.Drawing.Size(743, 246);
             this.dtgDetalle.TabIndex = 4;
+            this.dtgDetalle.UseEmbeddedNavigator = true;
             this.dtgDetalle.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridViewDetalle});
             // 
@@ -200,8 +207,10 @@
             this.Cantidad});
             this.gridViewDetalle.GridControl = this.dtgDetalle;
             this.gridViewDetalle.Name = "gridViewDetalle";
+            this.gridViewDetalle.NewItemRowText = "Agregar elemento";
             this.gridViewDetalle.InitNewRow += new DevExpress.XtraGrid.Views.Grid.InitNewRowEventHandler(this.gridViewDetalle_InitNewRow);
             this.gridViewDetalle.RowUpdated += new DevExpress.XtraGrid.Views.Base.RowObjectEventHandler(this.gridViewDetalle_RowUpdated);
+            this.gridViewDetalle.ValidatingEditor += new DevExpress.XtraEditors.Controls.BaseContainerValidateEditorEventHandler(this.gridViewDetalle_ValidatingEditor);
             // 
             // NumSolicitud
             // 
@@ -279,8 +288,7 @@
             this.layoutControlGroup3.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
             this.layoutControlGroup3.GroupBordersVisible = false;
             this.layoutControlGroup3.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.tabbedControlGroup1,
-            this.layoutControlItem12});
+            this.tabbedControlGroup1});
             this.layoutControlGroup3.Location = new System.Drawing.Point(0, 0);
             this.layoutControlGroup3.Name = "Root";
             this.layoutControlGroup3.Size = new System.Drawing.Size(791, 316);
@@ -293,7 +301,7 @@
             this.tabbedControlGroup1.Name = "tabbedControlGroup1";
             this.tabbedControlGroup1.SelectedTabPage = this.ControlsTabs;
             this.tabbedControlGroup1.SelectedTabPageIndex = 0;
-            this.tabbedControlGroup1.Size = new System.Drawing.Size(771, 273);
+            this.tabbedControlGroup1.Size = new System.Drawing.Size(771, 296);
             this.tabbedControlGroup1.TabPages.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
             this.ControlsTabs});
             // 
@@ -304,7 +312,7 @@
             this.layoutControlItem10});
             this.ControlsTabs.Location = new System.Drawing.Point(0, 0);
             this.ControlsTabs.Name = "ControlsTabs";
-            this.ControlsTabs.Size = new System.Drawing.Size(747, 227);
+            this.ControlsTabs.Size = new System.Drawing.Size(747, 250);
             this.ControlsTabs.Text = "Detalle Solicitud";
             // 
             // layoutControlItem10
@@ -312,7 +320,7 @@
             this.layoutControlItem10.Control = this.dtgDetalle;
             this.layoutControlItem10.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItem10.Name = "layoutControlItem10";
-            this.layoutControlItem10.Size = new System.Drawing.Size(747, 227);
+            this.layoutControlItem10.Size = new System.Drawing.Size(747, 250);
             this.layoutControlItem10.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem10.TextVisible = false;
             // 
@@ -588,7 +596,7 @@
             // 
             this.bar1.BarName = "Tools";
             this.bar1.DockCol = 0;
-            this.bar1.DockRow = 1;
+            this.bar1.DockRow = 0;
             this.bar1.DockStyle = DevExpress.XtraBars.BarDockStyle.Top;
             this.bar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(DevExpress.XtraBars.BarLinkUserDefines.PaintStyle, this.btnAgregar, DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph),
@@ -597,6 +605,51 @@
             new DevExpress.XtraBars.LinkPersistInfo(DevExpress.XtraBars.BarLinkUserDefines.PaintStyle, this.btnCancelar, DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph),
             new DevExpress.XtraBars.LinkPersistInfo(DevExpress.XtraBars.BarLinkUserDefines.PaintStyle, this.btnEliminar, DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph)});
             this.bar1.Text = "Tools";
+            // 
+            // btnAgregar
+            // 
+            this.btnAgregar.Caption = "Agregar";
+            this.btnAgregar.Glyph = ((System.Drawing.Image)(resources.GetObject("btnAgregar.Glyph")));
+            this.btnAgregar.Id = 2;
+            this.btnAgregar.LargeGlyph = ((System.Drawing.Image)(resources.GetObject("btnAgregar.LargeGlyph")));
+            this.btnAgregar.Name = "btnAgregar";
+            this.btnAgregar.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnAgregar_ItemClick);
+            // 
+            // btnEditar
+            // 
+            this.btnEditar.Caption = "Editar";
+            this.btnEditar.Glyph = ((System.Drawing.Image)(resources.GetObject("btnEditar.Glyph")));
+            this.btnEditar.Id = 3;
+            this.btnEditar.LargeGlyph = ((System.Drawing.Image)(resources.GetObject("btnEditar.LargeGlyph")));
+            this.btnEditar.Name = "btnEditar";
+            this.btnEditar.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnEditar_ItemClick);
+            // 
+            // btnGuardar
+            // 
+            this.btnGuardar.Caption = "Guardar";
+            this.btnGuardar.Glyph = ((System.Drawing.Image)(resources.GetObject("btnGuardar.Glyph")));
+            this.btnGuardar.Id = 4;
+            this.btnGuardar.LargeGlyph = ((System.Drawing.Image)(resources.GetObject("btnGuardar.LargeGlyph")));
+            this.btnGuardar.Name = "btnGuardar";
+            this.btnGuardar.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnGuardar_ItemClick);
+            // 
+            // btnCancelar
+            // 
+            this.btnCancelar.Caption = "Cancelar";
+            this.btnCancelar.Glyph = ((System.Drawing.Image)(resources.GetObject("btnCancelar.Glyph")));
+            this.btnCancelar.Id = 5;
+            this.btnCancelar.LargeGlyph = ((System.Drawing.Image)(resources.GetObject("btnCancelar.LargeGlyph")));
+            this.btnCancelar.Name = "btnCancelar";
+            this.btnCancelar.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnCancelar_ItemClick);
+            // 
+            // btnEliminar
+            // 
+            this.btnEliminar.Caption = "Eliminar";
+            this.btnEliminar.Glyph = ((System.Drawing.Image)(resources.GetObject("btnEliminar.Glyph")));
+            this.btnEliminar.Id = 6;
+            this.btnEliminar.LargeGlyph = ((System.Drawing.Image)(resources.GetObject("btnEliminar.LargeGlyph")));
+            this.btnEliminar.Name = "btnEliminar";
+            this.btnEliminar.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnEliminar_ItemClick);
             // 
             // bar3
             // 
@@ -652,85 +705,12 @@
             this.barHeaderItem1.Id = 0;
             this.barHeaderItem1.Name = "barHeaderItem1";
             // 
-            // btnAgregar
-            // 
-            this.btnAgregar.Caption = "Agregar";
-            this.btnAgregar.Glyph = ((System.Drawing.Image)(resources.GetObject("btnAgregar.Glyph")));
-            this.btnAgregar.Id = 2;
-            this.btnAgregar.LargeGlyph = ((System.Drawing.Image)(resources.GetObject("btnAgregar.LargeGlyph")));
-            this.btnAgregar.Name = "btnAgregar";
-            this.btnAgregar.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnAgregar_ItemClick);
-            // 
-            // btnEditar
-            // 
-            this.btnEditar.Caption = "Editar";
-            this.btnEditar.Glyph = ((System.Drawing.Image)(resources.GetObject("btnEditar.Glyph")));
-            this.btnEditar.Id = 3;
-            this.btnEditar.LargeGlyph = ((System.Drawing.Image)(resources.GetObject("btnEditar.LargeGlyph")));
-            this.btnEditar.Name = "btnEditar";
-            this.btnEditar.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnEditar_ItemClick);
-            // 
-            // btnGuardar
-            // 
-            this.btnGuardar.Caption = "Guardar";
-            this.btnGuardar.Glyph = ((System.Drawing.Image)(resources.GetObject("btnGuardar.Glyph")));
-            this.btnGuardar.Id = 4;
-            this.btnGuardar.LargeGlyph = ((System.Drawing.Image)(resources.GetObject("btnGuardar.LargeGlyph")));
-            this.btnGuardar.Name = "btnGuardar";
-            this.btnGuardar.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnGuardar_ItemClick);
-            // 
-            // btnCancelar
-            // 
-            this.btnCancelar.Caption = "Cancelar";
-            this.btnCancelar.Glyph = ((System.Drawing.Image)(resources.GetObject("btnCancelar.Glyph")));
-            this.btnCancelar.Id = 5;
-            this.btnCancelar.LargeGlyph = ((System.Drawing.Image)(resources.GetObject("btnCancelar.LargeGlyph")));
-            this.btnCancelar.Name = "btnCancelar";
-            this.btnCancelar.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnCancelar_ItemClick);
-            // 
-            // btnEliminar
-            // 
-            this.btnEliminar.Caption = "Eliminar";
-            this.btnEliminar.Glyph = ((System.Drawing.Image)(resources.GetObject("btnEliminar.Glyph")));
-            this.btnEliminar.Id = 6;
-            this.btnEliminar.LargeGlyph = ((System.Drawing.Image)(resources.GetObject("btnEliminar.LargeGlyph")));
-            this.btnEliminar.Name = "btnEliminar";
-            this.btnEliminar.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnEliminar_ItemClick);
-            // 
             // barStaticItem1
             // 
             this.barStaticItem1.Caption = "barStaticItem1";
             this.barStaticItem1.Id = 7;
             this.barStaticItem1.Name = "barStaticItem1";
             this.barStaticItem1.TextAlignment = System.Drawing.StringAlignment.Near;
-            // 
-            // lblTitulo
-            // 
-            this.lblTitulo.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.lblTitulo.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.Horizontal;
-            this.lblTitulo.Location = new System.Drawing.Point(45, 5);
-            this.lblTitulo.Name = "lblTitulo";
-            this.lblTitulo.Size = new System.Drawing.Size(63, 13);
-            this.lblTitulo.TabIndex = 0;
-            this.lblTitulo.Text = "labelControl1";
-            // 
-            // dtNavigator
-            // 
-            this.dtNavigator.Location = new System.Drawing.Point(12, 285);
-            this.dtNavigator.Name = "dtNavigator";
-            this.dtNavigator.Size = new System.Drawing.Size(228, 19);
-            this.dtNavigator.StyleController = this.layoutControl3;
-            this.dtNavigator.TabIndex = 5;
-            this.dtNavigator.Text = "dataNavigator1";
-            // 
-            // layoutControlItem12
-            // 
-            this.layoutControlItem12.Control = this.dtNavigator;
-            this.layoutControlItem12.Location = new System.Drawing.Point(0, 273);
-            this.layoutControlItem12.Name = "layoutControlItem12";
-            this.layoutControlItem12.Size = new System.Drawing.Size(771, 23);
-            this.layoutControlItem12.TextSize = new System.Drawing.Size(0, 0);
-            this.layoutControlItem12.TextVisible = false;
             // 
             // frmMaestroDetalleUpdate
             // 
@@ -788,7 +768,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem11)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Manager)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem12)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -854,8 +833,6 @@
         private DevExpress.XtraBars.BarButtonItem btnEliminar;
         private DevExpress.XtraBars.BarStaticItem barStaticItem1;
         private DevExpress.XtraEditors.LabelControl lblTitulo;
-        private DevExpress.XtraEditors.DataNavigator dtNavigator;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem12;
 
     }
 }

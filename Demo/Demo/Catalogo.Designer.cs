@@ -36,10 +36,8 @@
             this.txtTipo = new DevExpress.XtraEditors.TextEdit();
             this.layoutControl1 = new DevExpress.XtraLayout.LayoutControl();
             this.txtDescr = new DevExpress.XtraEditors.TextEdit();
-            this.dtNavigator = new DevExpress.XtraEditors.DataNavigator();
             this.layoutControlGroup1 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.ltemGrid = new DevExpress.XtraLayout.LayoutControlItem();
-            this.itemNavigate = new DevExpress.XtraLayout.LayoutControlItem();
             this.emptySpaceItem1 = new DevExpress.XtraLayout.EmptySpaceItem();
             this.emptySpaceItem2 = new DevExpress.XtraLayout.EmptySpaceItem();
             this.layoutControlGroup2 = new DevExpress.XtraLayout.LayoutControlGroup();
@@ -72,7 +70,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.txtDescr.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ltemGrid)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.itemNavigate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup2)).BeginInit();
@@ -101,8 +98,9 @@
             this.dtgTipo.Location = new System.Drawing.Point(7, 7);
             this.dtgTipo.MainView = this.gridView1;
             this.dtgTipo.Name = "dtgTipo";
-            this.dtgTipo.Size = new System.Drawing.Size(657, 128);
+            this.dtgTipo.Size = new System.Drawing.Size(657, 151);
             this.dtgTipo.TabIndex = 2;
+            this.dtgTipo.UseEmbeddedNavigator = true;
             this.dtgTipo.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
             // 
@@ -131,7 +129,6 @@
             // layoutControl1
             // 
             this.layoutControl1.Controls.Add(this.txtDescr);
-            this.layoutControl1.Controls.Add(this.dtNavigator);
             this.layoutControl1.Controls.Add(this.txtTipo);
             this.layoutControl1.Controls.Add(this.dtgTipo);
             this.layoutControl1.Location = new System.Drawing.Point(5, 37);
@@ -151,32 +148,12 @@
             this.txtDescr.StyleController = this.layoutControl1;
             this.txtDescr.TabIndex = 4;
             // 
-            // dtNavigator
-            // 
-            this.dtNavigator.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.dtNavigator.Buttons.Append.Enabled = false;
-            this.dtNavigator.Buttons.Append.Visible = false;
-            this.dtNavigator.Buttons.CancelEdit.Enabled = false;
-            this.dtNavigator.Buttons.CancelEdit.Visible = false;
-            this.dtNavigator.Buttons.EndEdit.Enabled = false;
-            this.dtNavigator.Buttons.EndEdit.Visible = false;
-            this.dtNavigator.Buttons.Remove.Enabled = false;
-            this.dtNavigator.Buttons.Remove.Visible = false;
-            this.dtNavigator.Location = new System.Drawing.Point(7, 139);
-            this.dtNavigator.Name = "dtNavigator";
-            this.dtNavigator.Size = new System.Drawing.Size(241, 19);
-            this.dtNavigator.StyleController = this.layoutControl1;
-            this.dtNavigator.TabIndex = 9;
-            this.dtNavigator.Text = "dataNavigator1";
-            this.dtNavigator.TextLocation = DevExpress.XtraEditors.NavigatorButtonsTextLocation.End;
-            // 
             // layoutControlGroup1
             // 
             this.layoutControlGroup1.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
             this.layoutControlGroup1.GroupBordersVisible = false;
             this.layoutControlGroup1.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
             this.ltemGrid,
-            this.itemNavigate,
             this.emptySpaceItem1,
             this.emptySpaceItem2,
             this.layoutControlGroup2});
@@ -191,18 +168,9 @@
             this.ltemGrid.Control = this.dtgTipo;
             this.ltemGrid.Location = new System.Drawing.Point(0, 0);
             this.ltemGrid.Name = "ltemGrid";
-            this.ltemGrid.Size = new System.Drawing.Size(661, 132);
+            this.ltemGrid.Size = new System.Drawing.Size(661, 155);
             this.ltemGrid.TextSize = new System.Drawing.Size(0, 0);
             this.ltemGrid.TextVisible = false;
-            // 
-            // itemNavigate
-            // 
-            this.itemNavigate.Control = this.dtNavigator;
-            this.itemNavigate.Location = new System.Drawing.Point(0, 132);
-            this.itemNavigate.Name = "itemNavigate";
-            this.itemNavigate.Size = new System.Drawing.Size(661, 23);
-            this.itemNavigate.TextSize = new System.Drawing.Size(0, 0);
-            this.itemNavigate.TextVisible = false;
             // 
             // emptySpaceItem1
             // 
@@ -482,7 +450,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.txtDescr.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ltemGrid)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.itemNavigate)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup2)).EndInit();
@@ -522,11 +489,9 @@
         private DevExpress.XtraBars.BarDockControl barDockControlBottom;
         private DevExpress.XtraBars.BarDockControl barDockControlLeft;
         private DevExpress.XtraBars.BarDockControl barDockControlRight;
-        private DevExpress.XtraEditors.DataNavigator dtNavigator;
         private DevExpress.XtraLayout.LayoutControl layoutControl1;
         private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroup1;
         private DevExpress.XtraLayout.LayoutControlItem ltemGrid;
-        private DevExpress.XtraLayout.LayoutControlItem itemNavigate;
         private DevExpress.XtraLayout.LayoutControlItem Tipo;
         private DevExpress.XtraLayout.LayoutControlItem Descripción;
         private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItem1;
