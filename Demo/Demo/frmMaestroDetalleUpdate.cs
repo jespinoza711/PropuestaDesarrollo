@@ -422,13 +422,17 @@ namespace Demo
 
         private void gridViewDetalle_ValidatingEditor(object sender, DevExpress.XtraEditors.Controls.BaseContainerValidateEditorEventArgs e)
         {
+            if (this.gridViewDetalle.FocusedRowHandle == DevExpress.XtraGrid.GridControl.AutoFilterRowHandle)
+                return;
+            
             DevExpress.XtraGrid.Views.Grid.GridView view = sender as DevExpress.XtraGrid.Views.Grid.GridView;
             DataView dataView = view.DataSource as DataView;
             System.Collections.IEnumerator en = dataView.GetEnumerator();
+            
             en.Reset();
 
             string currentCode = e.Value.ToString();
-
+            
             while (en.MoveNext()) {
                 DataRowView row = en.Current as DataRowView;
                 object colValue = row["Articulo"];
