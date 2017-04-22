@@ -10,7 +10,7 @@ namespace Demo
 {
     public static class TipoDAC
     {
-        public static SqlDataAdapter oAdaptadorTipo = InicializarAdaptador();
+        public static SqlDataAdapter oAdaptador = InicializarAdaptador();
 
         private static SqlDataAdapter InicializarAdaptador() {
             String getSQL = "SELECT *  FROM fnica.fafTIPO";
@@ -42,13 +42,13 @@ namespace Demo
         private static DataSet CreateDataSetTipo()
         {
             DataSet TipoDS = new DataSet();
-            DataTable tipoTable = TipoDS.Tables.Add("Tipo");
+            DataTable tipoTable = TipoDS.Tables.Add("Data");
             return TipoDS;
         }
 
         public static DataSet GetData() {
             DataSet TipoDS = CreateDataSetTipo();
-            oAdaptadorTipo.Fill(TipoDS.Tables["Tipo"]);
+            oAdaptador.Fill(TipoDS.Tables["Data"]);
             return TipoDS;
         }
     }

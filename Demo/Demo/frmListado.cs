@@ -18,50 +18,59 @@ namespace Demo
         const String _tituloVentana = "Listado de Solicitudes";
 
 
-        private void SetDefaultBehaviorControls()
-        {
-            //Grid
-            this.gridViewSolicitudes.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFullFocus;
-            this.gridViewSolicitudes.OptionsBehavior.Editable = false;
-            this.gridViewSolicitudes.OptionsSelection.EnableAppearanceFocusedRow = true;
-            this.gridViewSolicitudes.OptionsFilter.DefaultFilterEditorView = DevExpress.XtraEditors.FilterEditorViewMode.TextAndVisual;
-            this.gridViewSolicitudes.OptionsView.ShowAutoFilterRow = true;
-            //Navegador
-            this.dtgSolicitudes.EmbeddedNavigator.Buttons.Append.Enabled = false;
-            this.dtgSolicitudes.EmbeddedNavigator.Buttons.Append.Visible = false;
+        //private void SetDefaultBehaviorControls()
+        //{
+        //    //Grid
+        //    this.gridViewSolicitudes.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFullFocus;
+        //    this.gridViewSolicitudes.OptionsBehavior.Editable = false;
+        //    this.gridViewSolicitudes.OptionsSelection.EnableAppearanceFocusedRow = true;
+        //    this.gridViewSolicitudes.OptionsFilter.DefaultFilterEditorView = DevExpress.XtraEditors.FilterEditorViewMode.TextAndVisual;
+        //    this.gridViewSolicitudes.OptionsView.ShowAutoFilterRow = true;
+        //    //Navegador
+        //    this.dtgSolicitudes.EmbeddedNavigator.Buttons.Append.Enabled = false;
+        //    this.dtgSolicitudes.EmbeddedNavigator.Buttons.Append.Visible = false;
 
-            this.dtgSolicitudes.EmbeddedNavigator.Buttons.CancelEdit.Enabled = false;
-            this.dtgSolicitudes.EmbeddedNavigator.Buttons.CancelEdit.Visible = false;
+        //    this.dtgSolicitudes.EmbeddedNavigator.Buttons.CancelEdit.Enabled = false;
+        //    this.dtgSolicitudes.EmbeddedNavigator.Buttons.CancelEdit.Visible = false;
 
-            this.dtgSolicitudes.EmbeddedNavigator.Buttons.Remove.Enabled = false;
-            this.dtgSolicitudes.EmbeddedNavigator.Buttons.Remove.Visible = false;
+        //    this.dtgSolicitudes.EmbeddedNavigator.Buttons.Remove.Enabled = false;
+        //    this.dtgSolicitudes.EmbeddedNavigator.Buttons.Remove.Visible = false;
 
-            this.dtgSolicitudes.EmbeddedNavigator.Buttons.EndEdit.Enabled = false;
-            this.dtgSolicitudes.EmbeddedNavigator.Buttons.EndEdit.Visible = false;
-            this.dtgSolicitudes.EmbeddedNavigator.Enabled=true;
+        //    this.dtgSolicitudes.EmbeddedNavigator.Buttons.EndEdit.Enabled = false;
+        //    this.dtgSolicitudes.EmbeddedNavigator.Buttons.EndEdit.Visible = false;
+        //    this.dtgSolicitudes.EmbeddedNavigator.Enabled=true;
 
-            //Barra Prinicpal
-            this.bar1.OptionsBar.AllowQuickCustomization = false;
+        //    //Barra Prinicpal
+        //    this.bar1.OptionsBar.AllowQuickCustomization = false;
 
-            //titulo
-            this.lblTitulo.Font = new Font(lblTitulo.Font.FontFamily, 12f, FontStyle.Bold);
-            this.lblTitulo.Size = new Size(panelTitulo.Size.Width / 2, panelTitulo.Size.Height / 2);
-            this.lblTitulo.Top = (panelTitulo.Height / 2) - (lblTitulo.Height / 2);
-            this.lblTitulo.Left = (panelTitulo.Width / 2) - (lblTitulo.Width / 2);
-            this.lblTitulo.ForeColor = Color.DodgerBlue;
-            this.lblTitulo.Text = _tituloVentana;
+        //    //titulo
+        //    this.lblTitulo.Font = new Font(lblTitulo.Font.FontFamily, 12f, FontStyle.Bold);
+        //    this.lblTitulo.Size = new Size(panelTitulo.Size.Width / 2, panelTitulo.Size.Height / 2);
+        //    this.lblTitulo.Top = (panelTitulo.Height / 2) - (lblTitulo.Height / 2);
+        //    this.lblTitulo.Left = (panelTitulo.Width / 2) - (lblTitulo.Width / 2);
+        //    this.lblTitulo.ForeColor = Color.DodgerBlue;
+        //    this.lblTitulo.Text = _tituloVentana;
 
-            ////Titulo e Icono de la ventana
-            this.Text = _tituloVentana;
-            this.Icon = Properties.Resources.Icon1;
+        //    ////Titulo e Icono de la ventana
+        //    this.Text = _tituloVentana;
+        //    this.Icon = Properties.Resources.Icon1;
 
 
-        }
+        //}
 
         public frmListado()
         {
             InitializeComponent();
         }
+
+        private void EnlazarEventos()
+        {
+            this.btnAgregar.ItemClick += btnAgregar_ItemClick;
+            this.btnEditar.ItemClick += btnEditar_ItemClick;
+            this.btnEliminar.ItemClick += btnEliminar_ItemClick;
+            
+        }
+
 
         private void frmListado_Load(object sender, EventArgs e)
         {
@@ -69,8 +78,8 @@ namespace Demo
             {
                 HabilitarControles(false);
                 _dsSolicitud = SolicitudDAC.GetDataAsync("*","*").Result;
-                
-                SetDefaultBehaviorControls();
+                EnlazarEventos();
+                Util.SetDefaultBehaviorControls(this.gridViewSolicitudes,false,this.dtgSolicitudes,this.bar1,lblTitulo,panelTitulo,_tituloVentana,this);
 
                 PopulateGrid();
             }
@@ -144,7 +153,7 @@ namespace Demo
 
                     try
                     {
-                        TipoDAC.oAdaptadorTipo.Update(_dsSolicitud, "Solicitud");
+                        TipoDAC.oAdaptador.Update(_dsSolicitud, "Data");
                         _dsSolicitud.AcceptChanges();
 
                         PopulateGrid();
@@ -163,7 +172,13 @@ namespace Demo
         private void btnAgregar_ItemClick_1(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             frmMaestroDetalleUpdate ofrmMaestro = new frmMaestroDetalleUpdate();
+            ofrmMaestro.FormClosed += OfrmMaestro_FormClosed;
             ofrmMaestro.ShowDialog();
+        }
+
+        private void OfrmMaestro_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            PopulateGrid();
         }
 
         private void btnEditar_ItemClick_1(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -195,7 +210,7 @@ namespace Demo
                         oCmd.Parameters.Add("@Solicitud", SqlDbType.NVarChar).Value = sNumSolicitud;
                         int i = oCmd.ExecuteNonQuery();
 
-                        SolicitudDAC.oAdaptadorSolicitud.Update(_dsSolicitud, "Solicitud");
+                        SolicitudDAC.oAdaptador.Update(_dsSolicitud, "Data");
                         _dsSolicitud.AcceptChanges();
 
 

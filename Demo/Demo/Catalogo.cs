@@ -26,45 +26,17 @@ namespace Demo
             this.StartPosition = FormStartPosition.CenterScreen;
         }
 
-        private void SetDefaultBehaviorControls() { 
-            //Grid
-            this.gridView1.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFullFocus;
-            this.gridView1.OptionsBehavior.Editable = false;
-            this.gridView1.OptionsSelection.EnableAppearanceFocusedRow = true;
-            this.gridView1.OptionsFilter.DefaultFilterEditorView = DevExpress.XtraEditors.FilterEditorViewMode.TextAndVisual;
-            
-            //Navegador
-            this.dtgTipo.EmbeddedNavigator.Buttons.Append.Enabled = false;
-            this.dtgTipo.EmbeddedNavigator.Buttons.Append.Visible = false;
 
-            this.dtgTipo.EmbeddedNavigator.Buttons.CancelEdit.Enabled = false;
-            this.dtgTipo.EmbeddedNavigator.Buttons.CancelEdit.Visible = false;
-
-            this.dtgTipo.EmbeddedNavigator.Buttons.Remove.Enabled = false;
-            this.dtgTipo.EmbeddedNavigator.Buttons.Remove.Visible = false;
-
-            this.dtgTipo.EmbeddedNavigator.Buttons.EndEdit.Enabled = false;
-            this.dtgTipo.EmbeddedNavigator.Buttons.EndEdit.Visible = false;
-
-
-            //Barra Prinicpal
-            this.bar4.OptionsBar.AllowQuickCustomization = false;
-
-            //titulo
-            this.lblTitulo.Font =  new Font(lblTitulo.Font.FontFamily, 12f, FontStyle.Bold);
-            this.lblTitulo.Size = new Size(panelTitulo.Size.Width / 2, panelTitulo.Size.Height / 2);
-            this.lblTitulo.Top = (panelTitulo.Height / 2) - (lblTitulo.Height / 2);
-            this.lblTitulo.Left = (panelTitulo.Width / 2) - (lblTitulo.Width / 2);
-            this.lblTitulo.ForeColor = Color.DodgerBlue;
-            this.lblTitulo.Text = _tituloVentana;
-
-            ////Titulo e Icono de la ventana
-            this.Text = _tituloVentana;
-            this.Icon = Properties.Resources.Icon1;
-            
-            
+        private void EnlazarEventos() {
+            this.btnAgregar.ItemClick += btnAgregar_ItemClick;
+            this.btnEditar.ItemClick += btnEditar_ItemClick;
+            this.btnEliminar.ItemClick += btnEliminar_ItemClick;
+            this.btnGuardar.ItemClick += btnGuardar_ItemClick;
+            this.btnCancelar.ItemClick += btnCancelar_ItemClick;
+            this.gridView1.FocusedRowChanged += gridView1_FocusedRowChanged;
         }
 
+     
         private void Form1_Load(object sender, EventArgs e)
         {
             try
@@ -72,8 +44,9 @@ namespace Demo
                 HabilitarControles(false);
                 _dsTipo = TipoDAC.GetData();
 
-                SetDefaultBehaviorControls();
-                
+                Util.SetDefaultBehaviorControls(this.gridView1,false,this.dtgTipo,bar3,lblTitulo,panelTitulo,_tituloVentana,this);
+                EnlazarEventos();
+
                 PopulateGrid();        
             }
             catch (Exception ex) {
@@ -190,7 +163,7 @@ namespace Demo
 
                 if (okFlag)
                 {
-                    TipoDAC.oAdaptadorTipo.Update(_dsChanged, "Tipo");
+                    TipoDAC.oAdaptador.Update(_dsChanged, "Data");
                     lblStatus.Caption = "Actualizado " + currentRow["Descr"].ToString();
                     Application.DoEvents();
 
@@ -213,7 +186,7 @@ namespace Demo
                 _dtTipo.Rows.Add(currentRow);
                 try
                 {
-                    TipoDAC.oAdaptadorTipo.Update(_dsTipo, "Tipo");
+                    TipoDAC.oAdaptador.Update(_dsTipo, "Data");
                     _dsTipo.AcceptChanges();
 
                     lblStatus.Caption = "Se ha ingresado un nuevo registro";
@@ -253,7 +226,8 @@ namespace Demo
 
                     try
                     {
-                        TipoDAC.oAdaptadorTipo.Update(_dsTipo, "Tipo");
+                        
+                        TipoDAC.oAdaptador.Update(_dsTipo, "Data");
                         _dsTipo.AcceptChanges();
 
                         PopulateGrid();
@@ -263,6 +237,7 @@ namespace Demo
                     catch (System.Data.SqlClient.SqlException ex)
                     {
                         _dsTipo.RejectChanges();
+                        lblStatus.Caption = "";
                         MessageBox.Show(ex.Message);
                     }
                 }

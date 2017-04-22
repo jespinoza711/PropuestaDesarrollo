@@ -10,7 +10,7 @@ namespace Demo
 {
     public static class SolicitudDAC
     {
-        public static SqlDataAdapter oAdaptadorSolicitud = InicializarAdaptador();
+        public static SqlDataAdapter oAdaptador = InicializarAdaptador();
 
         private static SqlDataAdapter InicializarAdaptador() {
             String getSQL = "SELECT *  FROM fnica.solSolicitud where (codSucursal=@CodSucursal or @CodSucursal='*') and (NumSolicitud=@NumSolicitud or @NumSolicitud='*')";
@@ -61,23 +61,23 @@ namespace Demo
    
 
         public static void SetTransactionToAdaptador(bool Activo) {
-            oAdaptadorSolicitud.UpdateCommand.Transaction = (Activo) ?ConnectionManager.Tran :null;
-            oAdaptadorSolicitud.DeleteCommand.Transaction = (Activo) ?ConnectionManager.Tran:null;
-            oAdaptadorSolicitud.InsertCommand.Transaction = (Activo) ?ConnectionManager.Tran:null;
+            oAdaptador.UpdateCommand.Transaction = (Activo) ?ConnectionManager.Tran :null;
+            oAdaptador.DeleteCommand.Transaction = (Activo) ?ConnectionManager.Tran:null;
+            oAdaptador.InsertCommand.Transaction = (Activo) ?ConnectionManager.Tran:null;
         }
 
         private static DataSet CreateDataSet()
         {
             DataSet DS = new DataSet();
-            DataTable tipoTable = DS.Tables.Add("Solicitud");
+            DataTable tipoTable = DS.Tables.Add("Data");
             return DS;
         }
 
         public static DataSet GetData(String CodSucursal,String NumSolicitud) {
             DataSet DS = CreateDataSet();
-            oAdaptadorSolicitud.SelectCommand.Parameters["@CodSucursal"].Value = CodSucursal;
-            oAdaptadorSolicitud.SelectCommand.Parameters["@NumSolicitud"].Value = NumSolicitud;
-            oAdaptadorSolicitud.Fill(DS.Tables["Solicitud"]);
+            oAdaptador.SelectCommand.Parameters["@CodSucursal"].Value = CodSucursal;
+            oAdaptador.SelectCommand.Parameters["@NumSolicitud"].Value = NumSolicitud;
+            oAdaptador.Fill(DS.Tables["Data"]);
             return DS;
         }
 
@@ -96,9 +96,9 @@ namespace Demo
         {
             return Task.Factory.StartNew<DataSet>(() => {
                 DataSet DS = CreateDataSet();
-                oAdaptadorSolicitud.SelectCommand.Parameters["@CodSucursal"].Value = CodSucursal;
-                oAdaptadorSolicitud.SelectCommand.Parameters["@NumSolicitud"].Value = NumSolicitud;
-                oAdaptadorSolicitud.Fill(DS.Tables["Solicitud"]);
+                oAdaptador.SelectCommand.Parameters["@CodSucursal"].Value = CodSucursal;
+                oAdaptador.SelectCommand.Parameters["@NumSolicitud"].Value = NumSolicitud;
+                oAdaptador.Fill(DS.Tables["Data"]);
                 return DS;
             });
            

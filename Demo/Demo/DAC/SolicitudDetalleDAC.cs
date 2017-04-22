@@ -10,7 +10,7 @@ namespace Demo
 {
     public static class SolicitudDetalleDAC
     {
-        public static SqlDataAdapter oAdaptadorSolicitud = InicializarAdaptador();
+        public static SqlDataAdapter oAdaptador = InicializarAdaptador();
 
         private static SqlDataAdapter InicializarAdaptador()
         {
@@ -56,24 +56,24 @@ namespace Demo
 
         public static void SetTransactionToAdaptador(bool Activo)
         {
-            oAdaptadorSolicitud.UpdateCommand.Transaction = (Activo) ? ConnectionManager.Tran : null;
-            oAdaptadorSolicitud.DeleteCommand.Transaction = (Activo) ? ConnectionManager.Tran : null;
-            oAdaptadorSolicitud.InsertCommand.Transaction = (Activo) ? ConnectionManager.Tran : null;
+            oAdaptador.UpdateCommand.Transaction = (Activo) ? ConnectionManager.Tran : null;
+            oAdaptador.DeleteCommand.Transaction = (Activo) ? ConnectionManager.Tran : null;
+            oAdaptador.InsertCommand.Transaction = (Activo) ? ConnectionManager.Tran : null;
         }
 
         private static DataSet CreateDataSet()
         {
             DataSet DS = new DataSet();
-            DataTable tipoTable = DS.Tables.Add("SolicitudDetalle");
+            DataTable tipoTable = DS.Tables.Add("Data");
             return DS;
         }
 
         public static DataSet GetData(String CodSucursal,String NumSolicitud)
         {
             DataSet DS = CreateDataSet();
-            oAdaptadorSolicitud.SelectCommand.Parameters["@CodSucursal"].Value = CodSucursal;
-            oAdaptadorSolicitud.SelectCommand.Parameters["@NumSolicitud"].Value = NumSolicitud;
-            oAdaptadorSolicitud.Fill(DS.Tables["SolicitudDetalle"]);
+            oAdaptador.SelectCommand.Parameters["@CodSucursal"].Value = CodSucursal;
+            oAdaptador.SelectCommand.Parameters["@NumSolicitud"].Value = NumSolicitud;
+            oAdaptador.Fill(DS.Tables["Data"]);
             return DS;
         }
 

@@ -48,35 +48,7 @@ namespace Demo
             _currentRow["UsuarioSolicitud"] = sUsuario;
         }
 
-        //private void SetDefaultBehaviorControls()
-        //{
-        //    //Grid
-        //    this.gridViewDetalle.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFullFocus;
-        //    //this.gridViewDetalle.OptionsBehavior.Editable = false;
-        //    this.gridViewDetalle.OptionsSelection.EnableAppearanceFocusedRow = true;
-        //    this.gridViewDetalle.OptionsFilter.DefaultFilterEditorView = DevExpress.XtraEditors.FilterEditorViewMode.TextAndVisual;
-        //    this.gridViewDetalle.EditFormPrepared += gridViewDetalle_EditFormPrepared;
-        //    this.gridViewDetalle.NewItemRowText = Util.constNewItemTextGrid;
-        //    this.gridViewDetalle.ValidatingEditor+=gridViewDetalle_ValidatingEditor;
-        //    this.gridViewDetalle.OptionsView.ShowAutoFilterRow = true;
-        //    //Barra Prinicpal
-        //    this.bar1.OptionsBar.AllowQuickCustomization = false;
-            
-        //    //titulo
-        //    this.lblTitulo.Font = new Font(lblTitulo.Font.FontFamily, 12f, FontStyle.Bold);
-        //    this.lblTitulo.Size = new Size(panelTitulo.Size.Width / 2, panelTitulo.Size.Height / 2);
-        //    this.lblTitulo.Top = (panelTitulo.Height / 2) - (lblTitulo.Height / 2);
-        //    this.lblTitulo.Left = (panelTitulo.Width / 2) - (lblTitulo.Width / 2);
-        //    this.lblTitulo.ForeColor = Color.DodgerBlue;
-        //    this.lblTitulo.Text = _tituloVentana;
-
-        //    ////Titulo e Icono de la ventana
-        //    this.Text = _tituloVentana;
-        //    this.Icon = Properties.Resources.Icon1;
-
-
-        //}
-
+     
        
 
         public frmMaestroDetalleUpdate(DataSet ds,DataRow dr)
@@ -145,6 +117,16 @@ namespace Demo
             this.btnEliminar.Enabled = !Activo;
         }
 
+        private void EnlazarEventos()
+        {
+            this.btnAgregar.ItemClick += btnAgregar_ItemClick;
+            this.btnEditar.ItemClick += btnEditar_ItemClick;
+            this.btnEliminar.ItemClick += btnEliminar_ItemClick;
+            this.btnGuardar.ItemClick += btnGuardar_ItemClick;
+            this.btnCancelar.ItemClick += btnCancelar_ItemClick;
+        }
+
+
         private void frmMaestroDetalleUpdate_Load(object sender, EventArgs e)
         {
             try
@@ -153,6 +135,7 @@ namespace Demo
 
                 //SetDefaultBehaviorControls();
                 Util.SetDefaultBehaviorControls(this.gridViewDetalle,true, null, this.bar1, this.lblTitulo, this.panelTitulo, _tituloVentana, this);
+                EnlazarEventos();
 
                 this.gridViewDetalle.EditFormPrepared += gridViewDetalle_EditFormPrepared;
                 this.gridViewDetalle.NewItemRowText = Util.constNewItemTextGrid;
@@ -161,7 +144,7 @@ namespace Demo
 
                 //Configurar searchLookUp
 
-                this.slkupArticulo.DataSource = ArticuloDAC.GetData("*").Tables["Articulo"];
+                this.slkupArticulo.DataSource = ArticuloDAC.GetData("*").Tables["Data"];
                 this.slkupArticulo.DisplayMember = "DESCRIPCION";
                 this.slkupArticulo.ValueMember = "ARTICULO";
                 this.slkupArticulo.NullText = " --- ---";
@@ -291,8 +274,8 @@ namespace Demo
                     SolicitudDAC.SetTransactionToAdaptador(true);
                     SolicitudDetalleDAC.SetTransactionToAdaptador(true);
 
-                    SolicitudDAC.oAdaptadorSolicitud.Update(_dsChanged, "Solicitud");
-                    SolicitudDetalleDAC.oAdaptadorSolicitud.Update(_dsDetalle, "SolicitudDetalle");
+                    SolicitudDAC.oAdaptador.Update(_dsChanged, "Data");
+                    SolicitudDetalleDAC.oAdaptador.Update(_dsDetalle, "Data");
                     
                     this.lblStatusBar.Caption = "Actualizado " + _currentRow["Numsolicitud"].ToString();
                     Application.DoEvents();
@@ -303,7 +286,7 @@ namespace Demo
                     ConnectionManager.CommitTran();
                     SolicitudDAC.SetTransactionToAdaptador(false);
                     SolicitudDetalleDAC.SetTransactionToAdaptador(false);
-
+                    
                     PopulateGrid();
                     HabilitarControles(false);
                 }
@@ -333,11 +316,11 @@ namespace Demo
                     SolicitudDAC.SetTransactionToAdaptador(true);
                     SolicitudDetalleDAC.SetTransactionToAdaptador(true);
 
-                    SolicitudDAC.oAdaptadorSolicitud.Update(_dsSolicitud, "Solicitud");
+                    SolicitudDAC.oAdaptador.Update(_dsSolicitud, "Data");
                     _dsSolicitud.AcceptChanges();
 
                     //Agregar el detalle
-                    SolicitudDetalleDAC.oAdaptadorSolicitud.Update(_dsDetalle, "SolicitudDetalle");
+                    SolicitudDetalleDAC.oAdaptador.Update(_dsDetalle, "Data");
                     _dsDetalle.AcceptChanges();
 
                     ConnectionManager.CommitTran();
@@ -386,10 +369,10 @@ namespace Demo
                         oCmd.Parameters.Add("@Solicitud", SqlDbType.NVarChar).Value = sNumSolicitud;
                         int i = oCmd.ExecuteNonQuery();
 
-                        SolicitudDAC.oAdaptadorSolicitud.Update(_dsSolicitud, "Solicitud");
+                        SolicitudDAC.oAdaptador.Update(_dsSolicitud, "Data");
                         _dsSolicitud.AcceptChanges();
-                       
 
+                        
                         ConnectionManager.CommitTran();
                         SolicitudDAC.SetTransactionToAdaptador(false);
                         
@@ -397,13 +380,14 @@ namespace Demo
                         PopulateGrid();
                         this.lblStatusBar.Caption = msg;
                         Application.DoEvents();
-
+                        
                         this.Close();
                     }
                     catch (System.Data.SqlClient.SqlException ex)
                     {
                         ConnectionManager.RollBackTran();
                         _dsSolicitud.RejectChanges();
+                        this.lblStatusBar.Caption = "";
                         MessageBox.Show(ex.Message);
                     }
                 }

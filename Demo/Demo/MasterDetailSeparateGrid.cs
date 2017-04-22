@@ -26,7 +26,7 @@ namespace Demo
         {
             try
             {
-                _dtSolicitud = SolicitudDAC.GetData("*","*").Tables["Solicitud"];
+                _dtSolicitud = SolicitudDAC.GetData("*","*").Tables["Data"];
                 _dtSolicitudDetalle = SolicitudDetalleDAC.GetData("*","*").Tables[0];
                 PopulateGrid();
             }

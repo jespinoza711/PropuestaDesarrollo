@@ -25,7 +25,7 @@ namespace Demo
             try
             {
                 _dsSolicitud = new DataSet();
-                _dsSolicitud.Tables.Add(SolicitudDAC.GetData("*","*").Tables["Solicitud"].Copy());
+                _dsSolicitud.Tables.Add(SolicitudDAC.GetData("*","*").Tables["Data"].Copy());
                 _dsSolicitud.Tables.Add(SolicitudDetalleDAC.GetData("*","*").Tables[0].Copy());
                 PopulateGrid();
             }
@@ -41,14 +41,14 @@ namespace Demo
 
              // Establecer la relacion entre las dos tablas
             DataRelation relation = new DataRelation("SolicituSolicitudDetalle",
-                new DataColumn[] { _dsSolicitud.Tables["Solicitud"].Columns["NumSolicitud"], _dsSolicitud.Tables["Solicitud"].Columns["CodSucursal"] },
-                new DataColumn[] { _dsSolicitud.Tables["SolicitudDetalle"].Columns["NumSolicitud"], _dsSolicitud.Tables["SolicitudDetalle"].Columns["CodSucursal"] });
+                new DataColumn[] { _dsSolicitud.Tables["Solicitud"].Columns["NumSolicitud"], _dsSolicitud.Tables["Data"].Columns["CodSucursal"] },
+                new DataColumn[] { _dsSolicitud.Tables["SolicitudDetalle"].Columns["NumSolicitud"], _dsSolicitud.Tables["Data"].Columns["CodSucursal"] });
                 
             _dsSolicitud.Relations.Add(relation);
 
 
             this.dtgSolicitud.DataSource = _dsSolicitud;
-            this.dtgSolicitud.DataMember = "Solicitud";
+            this.dtgSolicitud.DataMember = "Data";
    
 
 

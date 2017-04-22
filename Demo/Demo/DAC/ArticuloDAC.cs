@@ -33,7 +33,7 @@ namespace Demo
         private static DataSet CreateDataSet()
         {
             DataSet DS = new DataSet();
-            DataTable tipoTable = DS.Tables.Add("Articulo");
+            DataTable tipoTable = DS.Tables.Add("Data");
             return DS;
         }
 
@@ -41,7 +41,7 @@ namespace Demo
         {
             DataSet DS = CreateDataSet();
             oAdaptadorSolicitud.SelectCommand.Parameters["@Articulo"].Value = Articulo;
-            oAdaptadorSolicitud.Fill(DS.Tables["Articulo"]);
+            oAdaptadorSolicitud.Fill(DS.Tables["Data"]);
             return DS;
         }
     }
